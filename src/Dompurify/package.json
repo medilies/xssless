@@ -1,0 +1,12 @@
+{
+    "name": "xssless-dompurify",
+    "main": "main.js",
+    "author": "medilies",
+    "type": "module",
+    "license": "MIT",
+    "description": "",
+    "dependencies": {
+        "dompurify": "^3.1.6",
+        "jsdom": "^24.1.1"
+    }
+}

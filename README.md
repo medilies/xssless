@@ -6,6 +6,7 @@
 [![Total Downloads](https://img.shields.io/packagist/dt/medilies/xssless.svg?style=flat-square)](https://packagist.org/packages/medilies/xssless)
 
 ...
+- https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html#html-sanitization
 
 ## Installation
 
