@@ -2,6 +2,8 @@
 
 namespace Medilies\Xssless\Dompurify;
 
+use Illuminate\Support\Facades\Http as FacadesHttp;
+
 class Http
 {
     public function clean(string $html): string
@@ -10,23 +12,8 @@ class Http
         $port = 8000;
         $url = "http://{$host}:{$port}";
 
-        $ch = curl_init($url);
+        $response = FacadesHttp::post($url, ['html' => $html]);
 
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $html);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, [
-            'Content-Type: text/html',
-        ]);
-
-        $response = curl_exec($ch);
-
-        if ($response === false) {
-            echo 'cURL Error: ' . curl_error($ch);
-        }
-
-        return $response;
-
-        curl_close($ch);
+        return $response->body();
     }
 }
