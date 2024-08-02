@@ -30,6 +30,7 @@ class DompurifyCli implements CliInterface
             throw new Exception("Cannot locate '$binPath'");
         }
 
+        // TODO: check node bin
         $command = $this->node.' '.
             escapeshellarg($binAbsPath).' '.
             escapeshellarg($htmlFile).' '.
@@ -71,10 +72,23 @@ class DompurifyCli implements CliInterface
 
     private function saveHtml(string $value): string
     {
-        // TODO: use system tmp
-        $path = __DIR__.'/'.microtime().'.xss';
+        // TODO: take from config
+        $tempDir = rtrim(sys_get_temp_dir(), DIRECTORY_SEPARATOR);
+        $dir = $tempDir.DIRECTORY_SEPARATOR.'xssless';
 
-        file_put_contents($path, $value);
+        if (! file_exists($dir)) {
+            if (mkdir($dir, 0777, true) === false) {
+                throw new Exception("Could not create directory '{$dir}'");
+            }
+        }
+
+        $fileName = mt_rand().'-'.str_replace([' ', '.'], '', microtime()).'.xss';
+
+        $path = $dir.DIRECTORY_SEPARATOR.$fileName;
+
+        if (file_put_contents($path, $value) === false) {
+            throw new Exception("Could not create file '{$path}'");
+        }
 
         return $path;
     }

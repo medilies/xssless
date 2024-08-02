@@ -47,6 +47,7 @@ class DompurifyService implements ServiceInterface
     {
         $this->configure($config);
 
+        // TODO: check node bin
         $this->serviceProcess = new Process(['node', __DIR__.'/http.js', $this->host, $this->port]);
         $this->serviceProcess->start();
 
