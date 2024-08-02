@@ -4,6 +4,8 @@ namespace Medilies\Xssless\Dompurify;
 
 use Exception;
 use Medilies\Xssless\CliInterface;
+use Symfony\Component\Process\Exception\ProcessFailedException;
+use Symfony\Component\Process\Process;
 
 class DompurifyCli implements CliInterface
 {
@@ -31,18 +33,15 @@ class DompurifyCli implements CliInterface
         }
 
         // TODO: check node bin
-        $command = $this->node.' '.
-            escapeshellarg($binAbsPath).' '.
-            escapeshellarg($htmlFile).' '.
-            '2>&1';
+        $process = new Process([$this->node, $binAbsPath, $htmlFile]);
+        $process->run();
 
-        exec($command, $output, $statusCode);
-
-        if ($statusCode !== 0) {
-            throw new Exception("[Exited with code $statusCode]: ".implode("\n", $output));
+        if (!$process->isSuccessful()) {
+            throw new ProcessFailedException($process);
         }
 
-        $cleanHtmlPath = $output[0];
+        $output = $process->getOutput();
+        $cleanHtmlPath = trim($output);
 
         $clean = file_get_contents($cleanHtmlPath);
 
@@ -50,9 +49,9 @@ class DompurifyCli implements CliInterface
             throw new Exception("Could not read the file '{$cleanHtmlPath}'");
         }
 
-        // finally
-        unlink($htmlFile) ?: throw new Exception('Failed to delete');
-        unlink($cleanHtmlPath) ?: throw new Exception('Failed to delete');
+        // ? finally
+        unlink($htmlFile) ?: throw new Exception("Failed to delete '$htmlFile'");
+        unlink($cleanHtmlPath) ?: throw new Exception("Failed to delete '$cleanHtmlPath'");
 
         return $clean;
     }
