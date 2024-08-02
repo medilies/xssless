@@ -12,17 +12,13 @@ class DompurifyCli implements CliInterface
     /** @param ?array<string, mixed> $config */
     public function __construct(?array $config = null)
     {
-        if (! is_null($config)) {
-            $this->configure($config);
-        }
+        $this->configure($config);
     }
 
     /** @param ?array<string, mixed> $config */
     public function exec(string $html, ?array $config = null): string
     {
-        if (! is_null($config)) {
-            $this->configure($config);
-        }
+        $this->configure($config);
 
         $htmlFile = $this->saveHtml($html);
 
@@ -60,9 +56,13 @@ class DompurifyCli implements CliInterface
         return $clean;
     }
 
-    /** @param array<string, mixed> $config */
-    public function configure(array $config): static
+    /** @param ?array<string, mixed> $config */
+    public function configure(?array $config): static
     {
+        if (is_null($config)) {
+            return $this;
+        }
+
         // TODO: validate
         $this->node = $config['node_path'];
 
@@ -71,6 +71,7 @@ class DompurifyCli implements CliInterface
 
     private function saveHtml(string $value): string
     {
+        // TODO: use system tmp
         $path = __DIR__.'/'.microtime().'.xss';
 
         file_put_contents($path, $value);

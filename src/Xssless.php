@@ -22,6 +22,22 @@ class Xssless
         };
     }
 
+    /** @param ?array<string, mixed> $config */
+    public function start(?array $config = null): ServiceInterface
+    {
+        $config ??= $this->config();
+
+        $class = $config['class'];
+
+        $service = new $class($config);
+
+        if (! $service instanceof ServiceInterface) {
+            throw new Exception('Must implement one of the interfaces.'); // TODO
+        }
+
+        return $service->start($config);
+    }
+
     private function exec(CliInterface $cleaner, string $html): string
     {
         return $cleaner->exec($html);
