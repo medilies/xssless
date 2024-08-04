@@ -9,33 +9,48 @@ class Xssless
     /** @param ?array<string, mixed> $config */
     public function clean(string $html, ?array $config = null): string
     {
-        $config ??= $this->config();
-
-        $class = $config['class'];
-
-        $cleaner = new $class($config);
+        $cleaner = $this->makeCleaner($config);
 
         return match (true) {
             $cleaner instanceof CliInterface => $this->exec($cleaner, $html),
             $cleaner instanceof ServiceInterface => $this->send($cleaner, $html),
-            default => throw new Exception('Must implement one of the interfaces.'), // TODO
         };
     }
 
     /** @param ?array<string, mixed> $config */
     public function start(?array $config = null): ServiceInterface
     {
-        $config ??= $this->config();
-
-        $class = $config['class'];
-
-        $service = new $class($config);
+        $service = $this->makeCleaner($config);
 
         if (! $service instanceof ServiceInterface) {
             throw new Exception('Must implement one of the interfaces.'); // TODO
         }
 
         return $service->start($config);
+    }
+
+    /** @param ?array<string, mixed> $config */
+    public function setup(?array $config = null): void
+    {
+        $service = $this->makeCleaner($config);
+
+        $service->setup($config);
+    }
+
+    /** @param ?array<string, mixed> $config */
+    private function makeCleaner(?array $config = null): CliInterface|ServiceInterface
+    {
+        $config ??= $this->config();
+
+        $class = $config['class'];
+
+        $cleaner = new $class($config);
+
+        if (! $cleaner instanceof ServiceInterface && ! $cleaner instanceof CliInterface) {
+            throw new Exception('Must implement one of the interfaces.'); // TODO
+        }
+
+        return $cleaner;
     }
 
     private function exec(CliInterface $cleaner, string $html): string
@@ -54,11 +69,15 @@ class Xssless
         // ! Laravel specific
         $driver = config('xssless.default');
 
-        // TODO: validate driver
+        if (! is_string($driver)) {
+            throw new Exception('xssless.default must be a string.');
+        }
 
         $config = config("xssless.{$driver}");
 
-        // TODO: validate array
+        if (! is_array($config)) {
+            throw new Exception("xssless.{$driver} must be an array.");
+        }
 
         return $config;
     }

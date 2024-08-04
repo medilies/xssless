@@ -8,7 +8,7 @@ use Medilies\Xssless\ServiceInterface;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 
-class DompurifyService implements ServiceInterface
+class DompurifyService extends Dompurify implements ServiceInterface
 {
     private string $host;
 
@@ -22,6 +22,22 @@ class DompurifyService implements ServiceInterface
     {
         $this->configure($config);
     }
+
+    /** @param ?array<string, mixed> $config */
+    public function configure(?array $config): static
+    {
+        if (is_null($config)) {
+            return $this;
+        }
+
+        // TODO validate
+        $this->host = $config['host'];
+        $this->port = $config['port'];
+
+        return $this;
+    }
+
+    // ========================================================================
 
     /** @param ?array<string, mixed> $config */
     public function send(string $html, ?array $config = null): string
@@ -47,7 +63,6 @@ class DompurifyService implements ServiceInterface
     {
         $this->configure($config);
 
-        // TODO: check node bin
         $this->serviceProcess = new Process(['node', __DIR__.'/http.js', $this->host, $this->port]);
         $this->serviceProcess->start();
 
@@ -89,18 +104,4 @@ class DompurifyService implements ServiceInterface
     }
 
     // ========================================================================
-
-    /** @param ?array<string, mixed> $config */
-    public function configure(?array $config): static
-    {
-        if (is_null($config)) {
-            return $this;
-        }
-
-        // TODO validate
-        $this->host = $config['host'];
-        $this->port = $config['port'];
-
-        return $this;
-    }
 }

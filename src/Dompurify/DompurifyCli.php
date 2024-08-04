@@ -7,14 +7,25 @@ use Medilies\Xssless\CliInterface;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 
-class DompurifyCli implements CliInterface
+class DompurifyCli extends Dompurify implements CliInterface
 {
-    private string $node;
-
     /** @param ?array<string, mixed> $config */
     public function __construct(?array $config = null)
     {
         $this->configure($config);
+    }
+
+    /** @param ?array<string, mixed> $config */
+    public function configure(?array $config): static
+    {
+        if (is_null($config)) {
+            return $this;
+        }
+
+        // TODO: validate
+        $this->node = $config['node_path'];
+
+        return $this;
     }
 
     /** @param ?array<string, mixed> $config */
@@ -32,11 +43,10 @@ class DompurifyCli implements CliInterface
             throw new Exception("Cannot locate '$binPath'");
         }
 
-        // TODO: check node bin
         $process = new Process([$this->node, $binAbsPath, $htmlFile]);
         $process->run();
 
-        if (!$process->isSuccessful()) {
+        if (! $process->isSuccessful()) {
             throw new ProcessFailedException($process);
         }
 
@@ -54,19 +64,6 @@ class DompurifyCli implements CliInterface
         unlink($cleanHtmlPath) ?: throw new Exception("Failed to delete '$cleanHtmlPath'");
 
         return $clean;
-    }
-
-    /** @param ?array<string, mixed> $config */
-    public function configure(?array $config): static
-    {
-        if (is_null($config)) {
-            return $this;
-        }
-
-        // TODO: validate
-        $this->node = $config['node_path'];
-
-        return $this;
     }
 
     private function saveHtml(string $value): string

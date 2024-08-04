@@ -8,6 +8,7 @@ use Medilies\Xssless\Dompurify\DompurifyService;
 return [
     'default' => 'dompurify-command',
 
+    // TODO: config object
     'cleaners' => [
         'dompurify-command' => [
             'node_path' => env('NODE_PATH', 'node'),
