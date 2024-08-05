@@ -2,8 +2,6 @@
 
 namespace Medilies\Xssless;
 
-use Exception;
-
 class Xssless
 {
     /** @param ?array<string, mixed> $config */
@@ -23,7 +21,7 @@ class Xssless
         $service = $this->makeCleaner($config);
 
         if (! $service instanceof ServiceInterface) {
-            throw new Exception('Must implement one of the interfaces.'); // TODO
+            throw new XsslessException("'".$service::class."' must implement: '".ServiceInterface::class."'.");
         }
 
         return $service->start($config);
@@ -47,7 +45,7 @@ class Xssless
         $cleaner = new $class($config);
 
         if (! $cleaner instanceof ServiceInterface && ! $cleaner instanceof CliInterface) {
-            throw new Exception('Must implement one of the interfaces.'); // TODO
+            throw new XsslessException("'$class' must implement one of the interfaces: '".ServiceInterface::class."' or '".CliInterface::class."'.");
         }
 
         return $cleaner;
@@ -70,13 +68,13 @@ class Xssless
         $driver = config('xssless.default');
 
         if (! is_string($driver)) {
-            throw new Exception('xssless.default must be a string.');
+            throw new XsslessException('xssless.default must be a string.');
         }
 
         $config = config("xssless.{$driver}");
 
         if (! is_array($config)) {
-            throw new Exception("xssless.{$driver} must be an array.");
+            throw new XsslessException("xssless.{$driver} must be an array.");
         }
 
         return $config;

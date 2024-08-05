@@ -31,6 +31,8 @@ class DompurifyService extends Dompurify implements ServiceInterface
         }
 
         // TODO validate
+        $this->node = $config['node_path'];
+        $this->npm = $config['npm_path'];
         $this->host = $config['host'];
         $this->port = $config['port'];
 
@@ -101,7 +103,7 @@ class DompurifyService extends Dompurify implements ServiceInterface
             return;
         }
 
-        $this->serviceProcess->stop();
+        $this->serviceProcess->stop(); // ? not necessary
         throw new ProcessFailedException($this->serviceProcess);
     }
 

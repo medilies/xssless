@@ -9,6 +9,8 @@ abstract class Dompurify
 {
     protected string $node;
 
+    protected string $npm;
+
     /** @param ?array<string, mixed> $config */
     abstract public function configure(?array $config): static;
 
@@ -17,13 +19,11 @@ abstract class Dompurify
     {
         $this->configure($config);
 
-        $process = new Process([$this->node, 'i'], __DIR__);
+        $process = new Process([$this->npm, 'i'], __DIR__);
         $process->run();
 
         if (! $process->isSuccessful()) {
             throw new ProcessFailedException($process);
         }
     }
-
-    // TODO: check node bin
 }

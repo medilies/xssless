@@ -4,6 +4,8 @@ use Medilies\Xssless\Dompurify\DompurifyService;
 
 it('cleans via send', function () {
     $cleaner = new DompurifyService([
+        'node_path' => 'node',
+        'npm_path' => 'npm',
         'host' => '127.0.0.1',
         'port' => 63000,
     ]);

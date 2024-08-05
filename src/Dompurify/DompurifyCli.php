@@ -2,8 +2,8 @@
 
 namespace Medilies\Xssless\Dompurify;
 
-use Exception;
 use Medilies\Xssless\CliInterface;
+use Medilies\Xssless\XsslessException;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 
@@ -24,6 +24,7 @@ class DompurifyCli extends Dompurify implements CliInterface
 
         // TODO: validate
         $this->node = $config['node_path'];
+        $this->npm = $config['npm_path'];
 
         return $this;
     }
@@ -40,7 +41,7 @@ class DompurifyCli extends Dompurify implements CliInterface
         $binAbsPath = realpath($binPath);
 
         if ($binAbsPath === false) {
-            throw new Exception("Cannot locate '$binPath'");
+            throw new XsslessException("Cannot locate '$binPath'");
         }
 
         $process = new Process([$this->node, $binAbsPath, $htmlFile]);
@@ -56,12 +57,12 @@ class DompurifyCli extends Dompurify implements CliInterface
         $clean = file_get_contents($cleanHtmlPath);
 
         if ($clean === false) {
-            throw new Exception("Could not read the file '{$cleanHtmlPath}'");
+            throw new XsslessException("Could not read the file '{$cleanHtmlPath}'");
         }
 
         // ? finally
-        unlink($htmlFile) ?: throw new Exception("Failed to delete '$htmlFile'");
-        unlink($cleanHtmlPath) ?: throw new Exception("Failed to delete '$cleanHtmlPath'");
+        unlink($htmlFile) ?: throw new XsslessException("Failed to delete '$htmlFile'");
+        unlink($cleanHtmlPath) ?: throw new XsslessException("Failed to delete '$cleanHtmlPath'");
 
         return $clean;
     }
@@ -74,7 +75,7 @@ class DompurifyCli extends Dompurify implements CliInterface
 
         if (! file_exists($dir)) {
             if (mkdir($dir, 0777, true) === false) {
-                throw new Exception("Could not create directory '{$dir}'");
+                throw new XsslessException("Could not create directory '{$dir}'");
             }
         }
 
@@ -83,7 +84,7 @@ class DompurifyCli extends Dompurify implements CliInterface
         $path = $dir.DIRECTORY_SEPARATOR.$fileName;
 
         if (file_put_contents($path, $value) === false) {
-            throw new Exception("Could not create file '{$path}'");
+            throw new XsslessException("Could not create file '{$path}'");
         }
 
         return $path;
