@@ -93,8 +93,10 @@ class DompurifyService extends Dompurify implements ServiceInterface
         return $this->serviceProcess->getIncrementalErrorOutput();
     }
 
-    public function throwIfFailed(): void
+    public function throwIfFailedOnExit(): void
     {
+        // TODO: throw if still running
+
         if ($this->serviceProcess->isSuccessful()) {
             return;
         }

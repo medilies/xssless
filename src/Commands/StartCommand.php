@@ -3,7 +3,6 @@
 namespace Medilies\Xssless\Commands;
 
 use Illuminate\Console\Command;
-use Medilies\Xssless\Dompurify\DompurifyService;
 use Medilies\Xssless\Facades\Xssless;
 
 class StartCommand extends Command
@@ -34,7 +33,7 @@ class StartCommand extends Command
 
             $this->comment($output);
             if (! empty($errorOutput)) {
-                $this->error('Error: '.$errorOutput);
+                $this->error($errorOutput);
             }
 
             pcntl_signal_dispatch();
@@ -43,6 +42,6 @@ class StartCommand extends Command
             usleep(100000);
         }
 
-        $service->throwIfFailed();
+        $service->throwIfFailedOnExit();
     }
 }

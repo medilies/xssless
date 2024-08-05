@@ -20,5 +20,5 @@ interface ServiceInterface
 
     public function getIncrementalErrorOutput(): string;
 
-    public function throwIfFailed(): void;
+    public function throwIfFailedOnExit(): void;
 }

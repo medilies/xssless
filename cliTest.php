@@ -35,4 +35,4 @@ while ($service->isRunning()) {
     usleep(100000);
 }
 
-$service->throwIfFailed();
+$service->throwIfFailedOnExit();

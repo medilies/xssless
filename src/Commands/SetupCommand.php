@@ -16,6 +16,6 @@ class SetupCommand extends Command
     public function handle(): void
     {
         // TODO: take driver from config
-        $service = Xssless::start(config('xssless.dompurify-service'));
+        Xssless::setup(config('xssless.dompurify-service'));
     }
 }
