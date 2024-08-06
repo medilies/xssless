@@ -30,7 +30,7 @@ test('clean()', function () {
         'node',
         'npm',
         '127.0.0.1',
-        63000,
+        63001,
     );
 
     $cleaner = (new Xssless)->using($config);
@@ -66,7 +66,7 @@ it('throws on bad node path', function () {
         'nodeZz',
         'npm',
         '127.0.0.1',
-        63000,
+        5555555555,
     ));
 
     expect(fn () => $service->start())->toThrow(ProcessFailedException::class);
