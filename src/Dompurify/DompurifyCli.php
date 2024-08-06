@@ -4,11 +4,12 @@ namespace Medilies\Xssless\Dompurify;
 
 use Medilies\Xssless\CliInterface;
 use Medilies\Xssless\ConfigInterface;
+use Medilies\Xssless\HasSetupInterface;
 use Medilies\Xssless\XsslessException;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 
-class DompurifyCli implements CliInterface
+class DompurifyCli implements CliInterface, HasSetupInterface
 {
     protected DompurifyCliConfig $config;
 
@@ -23,11 +24,7 @@ class DompurifyCli implements CliInterface
     public function setup(): void
     {
         $process = new Process([$this->config->getNpmPath(), 'i'], __DIR__);
-        $process->run();
-
-        if (! $process->isSuccessful()) {
-            throw new ProcessFailedException($process);
-        }
+        $process->mustRun();
     }
 
     public function exec(string $html): string

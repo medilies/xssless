@@ -6,11 +6,12 @@ use GuzzleHttp\Client;
 use GuzzleHttp\RequestOptions;
 use Medilies\Xssless\ConfigInterface;
 use Medilies\Xssless\ServiceInterface;
+use Medilies\Xssless\HasSetupInterface;
 use Medilies\Xssless\XsslessException;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 
-class DompurifyService implements ServiceInterface
+class DompurifyService implements ServiceInterface, HasSetupInterface
 {
     private DompurifyServiceConfig $config;
 

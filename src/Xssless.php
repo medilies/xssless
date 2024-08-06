@@ -33,6 +33,10 @@ class Xssless
     {
         $service = $this->makeCleaner($config);
 
+        if (! $service instanceof HasSetupInterface) {
+            throw new XsslessException("'".$service::class."' must implement: '".HasSetupInterface::class."'.");
+        }
+
         $service->setup();
     }
 
