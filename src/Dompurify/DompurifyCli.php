@@ -12,29 +12,16 @@ class DompurifyCli implements CliInterface
 {
     protected DompurifyCliConfig $config;
 
-    public function __construct(?DompurifyCliConfig $config = null)
+    /** @param DompurifyCliConfig $config */
+    public function configure(ConfigInterface $config): static
     {
-        $this->configure($config);
-    }
-
-    /** @param ?DompurifyCliConfig $config */
-    public function configure(?ConfigInterface $config): static
-    {
-        if (is_null($config)) {
-            return $this;
-        }
-
-        // TODO: validate
         $this->config = $config;
 
         return $this;
     }
 
-    /** @param ?DompurifyCliConfig $config */
-    public function setup(?ConfigInterface $config = null): void
+    public function setup(): void
     {
-        $this->configure($config);
-
         $process = new Process([$this->config->getNpmPath(), 'i'], __DIR__);
         $process->run();
 
@@ -43,11 +30,8 @@ class DompurifyCli implements CliInterface
         }
     }
 
-    /** @param ?DompurifyCliConfig $config */
-    public function exec(string $html, ?ConfigInterface $config = null): string
+    public function exec(string $html): string
     {
-        $this->configure($config);
-
         $htmlFile = $this->saveHtml($html);
 
         $binPath = __DIR__.'/cli.js';
@@ -83,7 +67,7 @@ class DompurifyCli implements CliInterface
 
     private function saveHtml(string $value): string
     {
-        // TODO: take from config
+        // TODO: take path from config
         $tempDir = rtrim(sys_get_temp_dir(), DIRECTORY_SEPARATOR);
         $dir = $tempDir.DIRECTORY_SEPARATOR.'xssless';
 

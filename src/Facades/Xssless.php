@@ -10,6 +10,7 @@ use Medilies\Xssless\ServiceInterface;
  * @method static ServiceInterface start(?ConfigInterface $config = null)
  * @method static void setup(?ConfigInterface $config = null)
  * @method static static usingLaravelConfig()
+ * @method static static using(ConfigInterface $config)
  *
  * @see \Medilies\Xssless\Xssless
  */

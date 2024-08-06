@@ -4,13 +4,13 @@ namespace Medilies\Xssless;
 
 interface ServiceInterface
 {
-    public function configure(?ConfigInterface $config): static;
+    public function configure(ConfigInterface $config): static;
 
-    public function setup(?ConfigInterface $config = null): void;
+    public function setup(): void;
 
-    public function send(string $html, ?ConfigInterface $config = null): string;
+    public function send(string $html): string;
 
-    public function start(?ConfigInterface $config = null): static;
+    public function start(): static;
 
     public function stop(): static;
 

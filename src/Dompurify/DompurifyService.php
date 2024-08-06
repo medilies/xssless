@@ -6,6 +6,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\RequestOptions;
 use Medilies\Xssless\ConfigInterface;
 use Medilies\Xssless\ServiceInterface;
+use Medilies\Xssless\XsslessException;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 
@@ -17,30 +18,16 @@ class DompurifyService implements ServiceInterface
     public Process $serviceProcess;
     // ? add static array for all processes
 
-    public function __construct(?DompurifyServiceConfig $config = null)
+    /** @param DompurifyServiceConfig $config */
+    public function configure(ConfigInterface $config): static
     {
-        $this->configure($config);
-    }
-
-    /** @param ?DompurifyServiceConfig $config */
-    public function configure(?ConfigInterface $config): static
-    {
-        // TODO: recheck this behavior
-        if (is_null($config)) {
-            return $this;
-        }
-
-        // TODO: validate
         $this->config = $config;
 
         return $this;
     }
 
-    /** @param ?DompurifyServiceConfig $config */
-    public function setup(?ConfigInterface $config = null): void
+    public function setup(): void
     {
-        $this->configure($config);
-
         $process = new Process([$this->config->npmPath, 'i'], __DIR__);
         $process->run();
 
@@ -51,11 +38,8 @@ class DompurifyService implements ServiceInterface
 
     // ========================================================================
 
-    /** @param ?DompurifyServiceConfig $config */
-    public function send(string $html, ?ConfigInterface $config = null): string
+    public function send(string $html): string
     {
-        $this->configure($config);
-
         $url = "http://{$this->config->getHost()}:{$this->config->getPort()}";
 
         $client = new Client;
@@ -70,11 +54,8 @@ class DompurifyService implements ServiceInterface
 
     // ========================================================================
 
-    /** @param ?DompurifyServiceConfig $config */
-    public function start(?ConfigInterface $config = null): static
+    public function start(): static
     {
-        $this->configure($config);
-
         $this->serviceProcess = new Process([
             $this->config->nodePath,
             __DIR__.'/http.js',
@@ -112,13 +93,15 @@ class DompurifyService implements ServiceInterface
 
     public function throwIfFailedOnExit(): void
     {
-        // TODO: throw if still running
+        if ($this->serviceProcess->isRunning()) {
+            // ? stop it
+            throw new XsslessException('The service is still running');
+        }
 
         if ($this->serviceProcess->isSuccessful()) {
             return;
         }
 
-        $this->serviceProcess->stop(); // ? not necessary
         throw new ProcessFailedException($this->serviceProcess);
     }
 

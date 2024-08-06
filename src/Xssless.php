@@ -6,6 +6,8 @@ class Xssless
 {
     private ConfigInterface $config;
 
+    // TODO: policy builder
+
     public function clean(string $html, ?ConfigInterface $config = null): string
     {
         $cleaner = $this->makeCleaner($config);
@@ -24,14 +26,14 @@ class Xssless
             throw new XsslessException("'".$service::class."' must implement: '".ServiceInterface::class."'.");
         }
 
-        return $service->start($config);
+        return $service->start();
     }
 
     public function setup(?ConfigInterface $config = null): void
     {
         $service = $this->makeCleaner($config);
 
-        $service->setup($config);
+        $service->setup();
     }
 
     public function usingLaravelConfig(): static
@@ -53,23 +55,30 @@ class Xssless
         return $this;
     }
 
+    public function using(ConfigInterface $config): static
+    {
+        $this->config = $config;
+
+        return $this;
+    }
+
     private function makeCleaner(?ConfigInterface $config = null): CliInterface|ServiceInterface
     {
         $config ??= $this->config ?? null;
 
         if (is_null($config)) {
-            throw new XsslessException('A config needs to be provided.');
+            throw new XsslessException('A config must be provided.');
         }
 
         $class = $config->getClass();
 
-        $cleaner = new $class($config);
+        $cleaner = new $class;
 
         if (! $cleaner instanceof ServiceInterface && ! $cleaner instanceof CliInterface) {
             throw new XsslessException("'$class' must implement one of the interfaces: '".ServiceInterface::class."' or '".CliInterface::class."'.");
         }
 
-        return $cleaner;
+        return $cleaner->configure($config);
     }
 
     private function exec(CliInterface $cleaner, string $html): string
