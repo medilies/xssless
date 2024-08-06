@@ -1,18 +1,10 @@
 <?php
 
-namespace Medilies\Xssless\Tests;
+namespace Tests;
 
-use Medilies\Xssless\XsslessServiceProvider;
-use Orchestra\Testbench\TestCase as Orchestra;
+use PHPUnit\Framework\TestCase as BaseTestCase;
 
-class TestCase extends Orchestra
+abstract class TestCase extends BaseTestCase
 {
-    protected function getPackageProviders($app)
-    {
-        return [
-            XsslessServiceProvider::class,
-        ];
-    }
-
-    public function getEnvironmentSetUp($app) {}
+    //
 }

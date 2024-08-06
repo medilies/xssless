@@ -2,7 +2,7 @@
 
 use Medilies\Xssless\Dompurify\DompurifyCli;
 use Medilies\Xssless\Dompurify\DompurifyCliConfig;
-use Medilies\Xssless\Tests\TestCase;
+use Tests\TestCase;
 
 uses(TestCase::class)
     ->beforeAll(function () {
