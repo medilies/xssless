@@ -4,8 +4,9 @@ namespace Medilies\Xssless;
 
 class Xssless
 {
-    /** @param ?array<string, mixed> $config */
-    public function clean(string $html, ?array $config = null): string
+    private ConfigInterface $config;
+
+    public function clean(string $html, ?ConfigInterface $config = null): string
     {
         $cleaner = $this->makeCleaner($config);
 
@@ -15,8 +16,7 @@ class Xssless
         };
     }
 
-    /** @param ?array<string, mixed> $config */
-    public function start(?array $config = null): ServiceInterface
+    public function start(?ConfigInterface $config = null): ServiceInterface
     {
         $service = $this->makeCleaner($config);
 
@@ -27,20 +27,41 @@ class Xssless
         return $service->start($config);
     }
 
-    /** @param ?array<string, mixed> $config */
-    public function setup(?array $config = null): void
+    public function setup(?ConfigInterface $config = null): void
     {
         $service = $this->makeCleaner($config);
 
         $service->setup($config);
     }
 
-    /** @param ?array<string, mixed> $config */
-    private function makeCleaner(?array $config = null): CliInterface|ServiceInterface
+    public function usingLaravelConfig(): static
     {
-        $config ??= $this->config();
+        $driver = config('xssless.default');
 
-        $class = $config['class'];
+        if (! is_string($driver)) {
+            throw new XsslessException('xssless.default must be a string.');
+        }
+
+        $config = config("xssless.{$driver}");
+
+        if (! $config instanceof ConfigInterface) {
+            throw new XsslessException("xssless.{$driver} must implement: ".ConfigInterface::class);
+        }
+
+        $this->config = $config;
+
+        return $this;
+    }
+
+    private function makeCleaner(?ConfigInterface $config = null): CliInterface|ServiceInterface
+    {
+        $config ??= $this->config ?? null;
+
+        if (is_null($config)) {
+            throw new XsslessException('A config needs to be provided.');
+        }
+
+        $class = $config->getClass();
 
         $cleaner = new $class($config);
 
@@ -59,24 +80,5 @@ class Xssless
     private function send(ServiceInterface $cleaner, string $html): string
     {
         return $cleaner->send($html);
-    }
-
-    /** @return array<string, mixed> $config */
-    private function config(): array
-    {
-        // ! Laravel specific
-        $driver = config('xssless.default');
-
-        if (! is_string($driver)) {
-            throw new XsslessException('xssless.default must be a string.');
-        }
-
-        $config = config("xssless.{$driver}");
-
-        if (! is_array($config)) {
-            throw new XsslessException("xssless.{$driver} must be an array.");
-        }
-
-        return $config;
     }
 }

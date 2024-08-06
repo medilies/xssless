@@ -3,34 +3,48 @@
 namespace Medilies\Xssless\Dompurify;
 
 use Medilies\Xssless\CliInterface;
+use Medilies\Xssless\ConfigInterface;
 use Medilies\Xssless\XsslessException;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 
-class DompurifyCli extends Dompurify implements CliInterface
+class DompurifyCli implements CliInterface
 {
-    /** @param ?array<string, mixed> $config */
-    public function __construct(?array $config = null)
+    protected DompurifyCliConfig $config;
+
+    public function __construct(?DompurifyCliConfig $config = null)
     {
         $this->configure($config);
     }
 
-    /** @param ?array<string, mixed> $config */
-    public function configure(?array $config): static
+    /** @param ?DompurifyCliConfig $config */
+    public function configure(?ConfigInterface $config): static
     {
         if (is_null($config)) {
             return $this;
         }
 
         // TODO: validate
-        $this->node = $config['node_path'];
-        $this->npm = $config['npm_path'];
+        $this->config = $config;
 
         return $this;
     }
 
-    /** @param ?array<string, mixed> $config */
-    public function exec(string $html, ?array $config = null): string
+    /** @param ?DompurifyCliConfig $config */
+    public function setup(?ConfigInterface $config = null): void
+    {
+        $this->configure($config);
+
+        $process = new Process([$this->config->getNpmPath(), 'i'], __DIR__);
+        $process->run();
+
+        if (! $process->isSuccessful()) {
+            throw new ProcessFailedException($process);
+        }
+    }
+
+    /** @param ?DompurifyCliConfig $config */
+    public function exec(string $html, ?ConfigInterface $config = null): string
     {
         $this->configure($config);
 
@@ -44,7 +58,7 @@ class DompurifyCli extends Dompurify implements CliInterface
             throw new XsslessException("Cannot locate '$binPath'");
         }
 
-        $process = new Process([$this->node, $binAbsPath, $htmlFile]);
+        $process = new Process([$this->config->getNodePath(), $binAbsPath, $htmlFile]);
         $process->run();
 
         if (! $process->isSuccessful()) {

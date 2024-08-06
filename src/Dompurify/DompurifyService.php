@@ -4,49 +4,59 @@ namespace Medilies\Xssless\Dompurify;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\RequestOptions;
+use Medilies\Xssless\ConfigInterface;
 use Medilies\Xssless\ServiceInterface;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 
-class DompurifyService extends Dompurify implements ServiceInterface
+class DompurifyService implements ServiceInterface
 {
-    private string $host;
+    private DompurifyServiceConfig $config;
 
-    private int $port;
-
+    // TODO: private
     public Process $serviceProcess;
     // ? add static array for all processes
 
-    /** @param ?array<string, mixed> $config */
-    public function __construct(?array $config = null)
+    public function __construct(?DompurifyServiceConfig $config = null)
     {
         $this->configure($config);
     }
 
-    /** @param ?array<string, mixed> $config */
-    public function configure(?array $config): static
+    /** @param ?DompurifyServiceConfig $config */
+    public function configure(?ConfigInterface $config): static
     {
+        // TODO: recheck this behavior
         if (is_null($config)) {
             return $this;
         }
 
-        // TODO validate
-        $this->node = $config['node_path'];
-        $this->npm = $config['npm_path'];
-        $this->host = $config['host'];
-        $this->port = $config['port'];
+        // TODO: validate
+        $this->config = $config;
 
         return $this;
     }
 
-    // ========================================================================
-
-    /** @param ?array<string, mixed> $config */
-    public function send(string $html, ?array $config = null): string
+    /** @param ?DompurifyServiceConfig $config */
+    public function setup(?ConfigInterface $config = null): void
     {
         $this->configure($config);
 
-        $url = "http://{$this->host}:{$this->port}";
+        $process = new Process([$this->config->npmPath, 'i'], __DIR__);
+        $process->run();
+
+        if (! $process->isSuccessful()) {
+            throw new ProcessFailedException($process);
+        }
+    }
+
+    // ========================================================================
+
+    /** @param ?DompurifyServiceConfig $config */
+    public function send(string $html, ?ConfigInterface $config = null): string
+    {
+        $this->configure($config);
+
+        $url = "http://{$this->config->getHost()}:{$this->config->getPort()}";
 
         $client = new Client;
         $res = $client->post($url, [
@@ -60,12 +70,17 @@ class DompurifyService extends Dompurify implements ServiceInterface
 
     // ========================================================================
 
-    /** @param ?array<string, mixed> $config */
-    public function start(?array $config = null): static
+    /** @param ?DompurifyServiceConfig $config */
+    public function start(?ConfigInterface $config = null): static
     {
         $this->configure($config);
 
-        $this->serviceProcess = new Process(['node', __DIR__.'/http.js', $this->host, $this->port]);
+        $this->serviceProcess = new Process([
+            $this->config->nodePath,
+            __DIR__.'/http.js',
+            $this->config->host,
+            $this->config->port,
+        ]);
         $this->serviceProcess->start();
 
         return $this;

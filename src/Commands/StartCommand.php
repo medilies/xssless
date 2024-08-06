@@ -15,8 +15,7 @@ class StartCommand extends Command
 
     public function handle(): void
     {
-        // TODO: take driver from config + check interface
-        $service = Xssless::start(config('xssless.dompurify-service'));
+        $service = Xssless::usingLaravelConfig()->start();
 
         $terminate = function ($signal) use ($service) {
             $this->alert("Terminating...\n");

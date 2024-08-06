@@ -4,8 +4,9 @@ namespace Medilies\Xssless;
 
 interface CliInterface
 {
-    /** @param ?array<string, mixed> $config */
-    public function setup(?array $config): void;
+    public function configure(?ConfigInterface $config): static;
 
-    public function exec(string $html): string;
+    public function setup(?ConfigInterface $config = null): void;
+
+    public function exec(string $html, ?ConfigInterface $config = null): string;
 }

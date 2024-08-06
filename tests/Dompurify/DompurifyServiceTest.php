@@ -1,14 +1,15 @@
 <?php
 
 use Medilies\Xssless\Dompurify\DompurifyService;
+use Medilies\Xssless\Dompurify\DompurifyServiceConfig;
 
 it('cleans via send', function () {
-    $cleaner = new DompurifyService([
-        'node_path' => 'node',
-        'npm_path' => 'npm',
-        'host' => '127.0.0.1',
-        'port' => 63000,
-    ]);
+    $cleaner = (new DompurifyService)->configure(new DompurifyServiceConfig(
+        'node',
+        'npm',
+        '127.0.0.1',
+        63000,
+    ));
 
     $cleaner->start();
 
@@ -16,7 +17,7 @@ it('cleans via send', function () {
 
     // TODO: move to ServiceInterface + timeout
     $cleaner->serviceProcess->waitUntil(function (string $type, string $buffer) {
-        return strpos($buffer, 'Server is running on http://127.0.0.1:63000') !== false;
+        return strpos($buffer, 'Server is running on') !== false;
     });
 
     $clean = $cleaner->send($dirty);

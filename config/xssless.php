@@ -1,26 +1,21 @@
 <?php
 
-// config for Medilies/Xssless
-
-use Medilies\Xssless\Dompurify\DompurifyCli;
-use Medilies\Xssless\Dompurify\DompurifyService;
+use Medilies\Xssless\Dompurify\DompurifyCliConfig;
+use Medilies\Xssless\Dompurify\DompurifyServiceConfig;
 
 return [
-    'default' => 'dompurify-command',
+    'default' => 'dompurify-cli',
 
-    // TODO: config object
     'cleaners' => [
-        'dompurify-command' => [
-            'node_path' => env('NODE_PATH', 'node'),
-            'npm_path' => env('NPM_PATH', 'npm'),
-            'class' => DompurifyCli::class,
-        ],
-        'dompurify-service' => [
-            'node_path' => env('NODE_PATH', 'node'),
-            'npm_path' => env('NPM_PATH', 'npm'),
-            'host' => '127.0.0.1',
-            'port' => 63000,
-            'class' => DompurifyService::class,
-        ],
+        'dompurify-cli' => new DompurifyCliConfig(
+            env('NODE_PATH', 'node'),
+            env('NPM_PATH', 'npm'),
+        ),
+        'dompurify-service' => new DompurifyServiceConfig(
+            env('NODE_PATH', 'node'),
+            env('NPM_PATH', 'npm'),
+            '127.0.0.1',
+            63000,
+        ),
     ],
 ];
