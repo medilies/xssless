@@ -2,10 +2,8 @@
 
 namespace Medilies\Xssless;
 
-interface ServiceInterface
+interface ServiceInterface extends ConfigurableInterface
 {
-    public function configure(ConfigInterface $config): static;
-
     public function setup(): void;
 
     public function send(string $html): string;
@@ -20,5 +18,5 @@ interface ServiceInterface
 
     public function getIncrementalErrorOutput(): string;
 
-    public function throwIfFailedOnExit(): void;
+    public function throwIfFailedOnTerm(): void;
 }

@@ -43,7 +43,7 @@ class DompurifyCli implements CliInterface
         }
 
         $process = new Process([$this->config->getNodePath(), $binAbsPath, $htmlFile]);
-        $process->run();
+        $process->mustRun();
 
         if (! $process->isSuccessful()) {
             throw new ProcessFailedException($process);

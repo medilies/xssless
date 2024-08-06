@@ -2,10 +2,8 @@
 
 namespace Medilies\Xssless;
 
-interface CliInterface
+interface CliInterface extends ConfigurableInterface
 {
-    public function configure(ConfigInterface $config): static;
-
     public function setup(): void;
 
     public function exec(string $html): string;

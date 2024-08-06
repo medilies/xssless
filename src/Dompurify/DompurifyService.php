@@ -29,11 +29,7 @@ class DompurifyService implements ServiceInterface
     public function setup(): void
     {
         $process = new Process([$this->config->npmPath, 'i'], __DIR__);
-        $process->run();
-
-        if (! $process->isSuccessful()) {
-            throw new ProcessFailedException($process);
-        }
+        $process->mustRun();
     }
 
     // ========================================================================
@@ -62,7 +58,18 @@ class DompurifyService implements ServiceInterface
             $this->config->host,
             $this->config->port,
         ]);
+
         $this->serviceProcess->start();
+
+        $this->serviceProcess->waitUntil(function (string $type, string $buffer) {
+            // ? timeout
+            // ! ensure service always returns output
+            return strlen($buffer) > 5;
+        });
+
+        if (! $this->serviceProcess->isRunning()) {
+            throw new ProcessFailedException($this->serviceProcess);
+        }
 
         return $this;
     }
@@ -91,14 +98,14 @@ class DompurifyService implements ServiceInterface
         return $this->serviceProcess->getIncrementalErrorOutput();
     }
 
-    public function throwIfFailedOnExit(): void
+    public function throwIfFailedOnTerm(): void
     {
         if ($this->serviceProcess->isRunning()) {
             // ? stop it
             throw new XsslessException('The service is still running');
         }
 
-        if ($this->serviceProcess->isSuccessful()) {
+        if ($this->serviceProcess->getTermSignal() === SIGTERM) {
             return;
         }
 
