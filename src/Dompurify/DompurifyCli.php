@@ -6,7 +6,6 @@ use Medilies\Xssless\CliInterface;
 use Medilies\Xssless\ConfigInterface;
 use Medilies\Xssless\HasSetupInterface;
 use Medilies\Xssless\XsslessException;
-use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 
 class DompurifyCli implements CliInterface, HasSetupInterface
