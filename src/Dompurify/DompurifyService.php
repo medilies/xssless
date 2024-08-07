@@ -55,7 +55,7 @@ class DompurifyService implements HasSetupInterface, ServiceInterface
     {
         $this->serviceProcess = new Process([
             $this->config->nodePath,
-            __DIR__.'/http.js',
+            __DIR__.DIRECTORY_SEPARATOR.'http.js',
             $this->config->host,
             $this->config->port,
         ]);
@@ -106,7 +106,8 @@ class DompurifyService implements HasSetupInterface, ServiceInterface
             throw new XsslessException('The service is still running');
         }
 
-        if ($this->serviceProcess->getTermSignal() === SIGTERM) {
+        // TODO: fix windows check
+        if ($this->isSigTerm() || $this->isWindows()) {
             return;
         }
 
@@ -130,4 +131,19 @@ class DompurifyService implements HasSetupInterface, ServiceInterface
     }
 
     // ========================================================================
+
+    private function isWindows(): bool
+    {
+        return strtoupper(substr(PHP_OS, 0, 3)) === 'WIN';
+    }
+
+    private function isSigTerm(): bool
+    {
+        return $this->serviceProcess->getTermSignal() === 15;
+    }
+
+    private function isSigHup(): bool
+    {
+        return $this->serviceProcess->getTermSignal() === 1;
+    }
 }

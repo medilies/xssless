@@ -30,7 +30,7 @@ class DompurifyCli implements CliInterface, HasSetupInterface
     {
         $htmlFile = $this->saveHtml($html);
 
-        $binPath = __DIR__.'/cli.js';
+        $binPath = __DIR__.DIRECTORY_SEPARATOR.'cli.js';
 
         $binAbsPath = realpath($binPath);
 
