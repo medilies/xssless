@@ -70,6 +70,7 @@ it('throws on bad node path', function () {
     ));
 
     expect(fn () => $service->start())->toThrow(ProcessFailedException::class);
-    $service->waitForTermination(20000);
+    $service->waitForTermination(2000);
     expect($service->serviceProcess->getExitCode())->toBe(127);
+    // TODO: fix https://github.com/medilies/xssless/actions/runs/10284119857/job/28459470742#step:7:28
 });

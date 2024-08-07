@@ -43,7 +43,7 @@ This is the contents of the published config file:
 return [
     'default' => 'dompurify-cli',
 
-    'cleaners' => [
+    'drivers' => [
         'dompurify-cli' => new DompurifyCliConfig(
             env('NODE_PATH', 'node'),
             env('NPM_PATH', 'npm'),
