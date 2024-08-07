@@ -11,4 +11,3 @@ uses(TestCase::class)
             ->setup();
     })
     ->in(__DIR__.'/Dompurify');
-

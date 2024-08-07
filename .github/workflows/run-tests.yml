@@ -40,7 +40,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          composer i --no-interaction --no-update
+          composer i --no-interaction
           composer update --${{ matrix.stability }} --prefer-dist --no-interaction
 
       - name: List Installed Dependencies

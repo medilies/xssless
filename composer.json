@@ -22,7 +22,7 @@
         "symfony/process": "^7.1"
     },
     "require-dev": {
-        "illuminate/support": "*",
+        "laravel/framework": "^11 || 10",
         "laravel/pint": "^1.14",
         "nunomaduro/collision": "^8.1.1||^7.10.0",
         "pestphp/pest": "^2.34",
