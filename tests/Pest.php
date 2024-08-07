@@ -12,10 +12,3 @@ uses(TestCase::class)
     })
     ->in(__DIR__.'/Dompurify');
 
-// uses(TestCase::class)
-//     ->beforeAll(function () {
-//         (new DompurifyCli)
-//             ->configure(new DompurifyCliConfig('node', 'npm'))
-//             ->setup();
-//     })
-//     ->in(__DIR__);
