@@ -1,9 +1,9 @@
 <?php
 
-namespace Medilies\Xssless\Commands;
+namespace Medilies\Xssless\Laravel\Commands;
 
 use Illuminate\Console\Command;
-use Medilies\Xssless\Facades\Xssless;
+use Medilies\Xssless\Laravel\Facades\Xssless;
 
 class SetupCommand extends Command
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Medilies\Xssless\Facades;
+namespace Medilies\Xssless\Laravel\Facades;
 
 use Illuminate\Support\Facades\Facade;
 use Medilies\Xssless\ServiceInterface;
