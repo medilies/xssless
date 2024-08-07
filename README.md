@@ -1,8 +1,8 @@
-# Sanitize your HTML against XSS threats.
+# Clean your strings from XSS threats
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/medilies/xssless.svg?style=flat-square)](https://packagist.org/packages/medilies/xssless)
-[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/medilies/xssless/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/medilies/xssless/actions?query=workflow%3Arun-tests+branch%3Amain)
-[![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/medilies/xssless/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/medilies/xssless/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
+[![pest](https://img.shields.io/github/actions/workflow/status/medilies/xssless/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/medilies/xssless/actions?query=workflow%3Arun-tests+branch%3Amain)
+[![phpstan](https://img.shields.io/github/actions/workflow/status/medilies/xssless/fix-php-code-style-issues.yml?branch=main&label=phpstan&style=flat-square)](https://github.com/medilies/xssless/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/medilies/xssless.svg?style=flat-square)](https://packagist.org/packages/medilies/xssless)
 
 Use what is recommended by [OWASP](https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html#html-sanitization):
@@ -26,7 +26,7 @@ $config = new Medilies\Xssless\Dompurify\DompurifyCliConfig('node', 'npm');
 
 (new Medilies\Xssless\Xssless)
     ->using($config)
-    ->setup($html);
+    ->setup();
 ```
 
 ### Laravel setup

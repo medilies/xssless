@@ -18,7 +18,7 @@ class StartCommand extends Command
         $service = Xssless::usingLaravelConfig()->start();
 
         $terminate = function ($signal) use ($service) {
-            $this->alert("Terminating...\n");
+            $this->warn("Terminating...\n");
             $service->stop();
             exit;
         };
@@ -30,8 +30,10 @@ class StartCommand extends Command
             $output = $service->getIncrementalOutput();
             $errorOutput = $service->getIncrementalErrorOutput();
 
-            $this->comment($output);
-            if (! empty($errorOutput)) {
+            if ($output !== '') {
+                $this->line($output);
+            }
+            if ($errorOutput !== '') {
                 $this->error($errorOutput);
             }
 

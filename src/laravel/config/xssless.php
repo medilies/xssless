@@ -6,7 +6,7 @@ use Medilies\Xssless\Dompurify\DompurifyServiceConfig;
 return [
     'default' => 'dompurify-cli',
 
-    'cleaners' => [
+    'drivers' => [
         'dompurify-cli' => new DompurifyCliConfig(
             env('NODE_PATH', 'node'),
             env('NPM_PATH', 'npm'),

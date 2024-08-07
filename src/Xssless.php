@@ -51,7 +51,7 @@ class Xssless
         $config = config("xssless.{$driver}");
 
         if (! $config instanceof ConfigInterface) {
-            throw new XsslessException("xssless.{$driver} must implement: ".ConfigInterface::class);
+            throw new XsslessException("xssless.drivers.{$driver} must implement: ".ConfigInterface::class);
         }
 
         $this->config = $config;

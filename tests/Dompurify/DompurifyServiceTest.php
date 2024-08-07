@@ -70,5 +70,7 @@ it('throws on bad node path', function () {
     ));
 
     expect(fn () => $service->start())->toThrow(ProcessFailedException::class);
-    expect($service->serviceProcess->getTermSignal() === 127); // TODO https://github.com/medilies/xssless/actions/runs/10283025153/job/28455979969
+    expect($service->serviceProcess->getTermSignal())->toBe(127);
+    // TODO: fix https://github.com/medilies/xssless/actions/runs/10283025153/job/28455979969
+    // TODO: wait for signal
 });
