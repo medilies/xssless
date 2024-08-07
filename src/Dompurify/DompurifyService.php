@@ -113,5 +113,21 @@ class DompurifyService implements HasSetupInterface, ServiceInterface
         throw new ProcessFailedException($this->serviceProcess);
     }
 
+    // ? interface
+    public function waitForTermination(int $timeout): void
+    {
+        $elapsed = 0;
+        $sleepInterval = 100; // Sleep for 100 milliseconds
+
+        while ($this->serviceProcess->isRunning() && $elapsed < $timeout) {
+            usleep($sleepInterval * 1000);
+            $elapsed += $sleepInterval;
+        }
+
+        if ($this->serviceProcess->isRunning()) {
+            throw new XsslessException('Process did not terminate within the given timeout');
+        }
+    }
+
     // ========================================================================
 }
