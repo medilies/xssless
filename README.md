@@ -5,6 +5,8 @@
 [![phpstan](https://img.shields.io/github/actions/workflow/status/medilies/xssless/fix-php-code-style-issues.yml?branch=main&label=phpstan&style=flat-square)](https://github.com/medilies/xssless/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/medilies/xssless.svg?style=flat-square)](https://packagist.org/packages/medilies/xssless)
 
+![workflow](./workflow.png)
+
 Use what is recommended by [OWASP](https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html#html-sanitization):
 
 > HTML Sanitization will strip dangerous HTML from a variable and return a safe string of HTML. OWASP recommends DOMPurify for HTML Sanitization.
