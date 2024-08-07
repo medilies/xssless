@@ -42,10 +42,6 @@ class DompurifyCli implements CliInterface, HasSetupInterface
         $process = new Process([$this->config->getNodePath(), $binAbsPath, $htmlFile]);
         $process->mustRun();
 
-        if (! $process->isSuccessful()) {
-            throw new ProcessFailedException($process);
-        }
-
         $output = $process->getOutput();
         $cleanHtmlPath = trim($output);
 
@@ -70,7 +66,7 @@ class DompurifyCli implements CliInterface, HasSetupInterface
 
         if (! file_exists($dir)) {
             if (mkdir($dir, 0777, true) === false) {
-                throw new XsslessException("Could not create directory '{$dir}'");
+                throw new XsslessException("Could not create temporary directory '{$dir}'");
             }
         }
 

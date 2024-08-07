@@ -7,11 +7,18 @@
 
 ![workflow](./workflow.png)
 
-Use what is recommended by [OWASP](https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html#html-sanitization):
+> [!NOTE]
+> Note that the library is still in its alpha phase. While the exposed methods are likely stable, configurations and internals may change, especially if you extend the package or create your own driver.
 
-> HTML Sanitization will strip dangerous HTML from a variable and return a safe string of HTML. OWASP recommends DOMPurify for HTML Sanitization.
+## Why use Xssless
 
-Note that the library is still in its alfa-phase. The methods exposed in this doc will most likely not change, but the configs and the internals may change a lot incase you decide to extend the package or create your own driver.
+- **Prevent XSS Attacks:** Safeguard your application by cleaning user-submitted HTML, eliminating potential XSS threats.
+- **Painless HTML 5 support:** Xssless leverages engines with the best HTML5 support.
+- **Easy to build policies:** (todo).
+
+The default driver aligns with [OWASP](https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html#html-sanitization) recommendations:
+
+> HTML Sanitization will strip dangerous HTML from a variable and return a safe string of HTML. OWASP recommends **DOMPurify** for HTML Sanitization.
 
 ## Installation
 
