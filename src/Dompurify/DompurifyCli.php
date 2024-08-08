@@ -12,6 +12,8 @@ class DompurifyCli implements CliInterface, HasSetupInterface
 {
     protected DompurifyCliConfig $config;
 
+    // TODO: better injection (fs and process)
+
     /** @param DompurifyCliConfig $config */
     public function configure(ConfigInterface $config): static
     {
@@ -30,15 +32,7 @@ class DompurifyCli implements CliInterface, HasSetupInterface
     {
         $htmlFile = $this->saveHtml($html);
 
-        $binPath = __DIR__.DIRECTORY_SEPARATOR.'cli.js';
-
-        $binAbsPath = realpath($binPath);
-
-        if ($binAbsPath === false) {
-            throw new XsslessException("Cannot locate '$binPath'");
-        }
-
-        $process = new Process([$this->config->getNodePath(), $binAbsPath, $htmlFile]);
+        $process = new Process([$this->config->getNodePath(), $this->binPath(), $htmlFile]);
         $process->mustRun();
 
         $output = $process->getOutput();
@@ -57,7 +51,36 @@ class DompurifyCli implements CliInterface, HasSetupInterface
         return $clean;
     }
 
+    private function binPath(): string
+    {
+        // TODO: allow config to override
+        $binPath = __DIR__.DIRECTORY_SEPARATOR.'cli.js';
+
+        $binAbsPath = realpath($binPath);
+
+        if ($binAbsPath === false) {
+            throw new XsslessException("Cannot locate '$binPath'");
+        }
+
+        return $binAbsPath;
+    }
+
     private function saveHtml(string $value): string
+    {
+        $dir = $this->tempDir();
+
+        $fileName = mt_rand().'-'.str_replace([' ', '.'], '', microtime()).'.xss';
+
+        $path = $dir.DIRECTORY_SEPARATOR.$fileName;
+
+        if (file_put_contents($path, $value) === false) {
+            throw new XsslessException("Could not create file '{$path}'");
+        }
+
+        return $path;
+    }
+
+    private function tempDir(): string
     {
         // TODO: take path from config
         $tempDir = rtrim(sys_get_temp_dir(), DIRECTORY_SEPARATOR);
@@ -69,14 +92,6 @@ class DompurifyCli implements CliInterface, HasSetupInterface
             }
         }
 
-        $fileName = mt_rand().'-'.str_replace([' ', '.'], '', microtime()).'.xss';
-
-        $path = $dir.DIRECTORY_SEPARATOR.$fileName;
-
-        if (file_put_contents($path, $value) === false) {
-            throw new XsslessException("Could not create file '{$path}'");
-        }
-
-        return $path;
+        return $dir;
     }
 }

@@ -15,6 +15,8 @@ class DompurifyService implements HasSetupInterface, ServiceInterface
 {
     private DompurifyServiceConfig $config;
 
+    // TODO: better injection (fs and process http)
+
     // TODO: private
     public Process $serviceProcess;
     // ? add static array for all processes
@@ -33,8 +35,6 @@ class DompurifyService implements HasSetupInterface, ServiceInterface
         $process->mustRun();
     }
 
-    // ========================================================================
-
     public function send(string $html): string
     {
         $url = "http://{$this->config->getHost()}:{$this->config->getPort()}";
@@ -48,8 +48,6 @@ class DompurifyService implements HasSetupInterface, ServiceInterface
 
         return $res->getBody();
     }
-
-    // ========================================================================
 
     public function start(): static
     {
@@ -107,6 +105,7 @@ class DompurifyService implements HasSetupInterface, ServiceInterface
         }
 
         // TODO: fix windows check
+        // https://github.com/medilies/xssless/actions/runs/10288495452/job/28474063301#step:7:26
         if ($this->isSigTerm() || $this->isWindows()) {
             return;
         }
@@ -142,8 +141,8 @@ class DompurifyService implements HasSetupInterface, ServiceInterface
         return $this->serviceProcess->getTermSignal() === 15;
     }
 
-    private function isSigHup(): bool
-    {
-        return $this->serviceProcess->getTermSignal() === 1;
-    }
+    // private function isSigHup(): bool
+    // {
+    //     return $this->serviceProcess->getTermSignal() === 1;
+    // }
 }
