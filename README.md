@@ -2,13 +2,10 @@
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/medilies/xssless.svg?style=flat-square)](https://packagist.org/packages/medilies/xssless)
 [![pest](https://img.shields.io/github/actions/workflow/status/medilies/xssless/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/medilies/xssless/actions?query=workflow%3Arun-tests+branch%3Amain)
-[![phpstan](https://img.shields.io/github/actions/workflow/status/medilies/xssless/fix-php-code-style-issues.yml?branch=main&label=phpstan&style=flat-square)](https://github.com/medilies/xssless/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
+[![phpstan](https://img.shields.io/github/actions/workflow/status/medilies/xssless/phpstan.yml?branch=main&label=phpstan&style=flat-square)](https://github.com/medilies/xssless/actions?query=workflow%3A"phpstan"+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/medilies/xssless.svg?style=flat-square)](https://packagist.org/packages/medilies/xssless)
 
 ![workflow](./workflow.png)
-
-> [!NOTE]
-> Note that the library is still in its alpha phase. While the exposed methods are likely stable, configurations and internals may change, especially if you extend the package or create your own driver.
 
 ## Why use Xssless
 
@@ -19,6 +16,11 @@
 The default driver aligns with [OWASP](https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html#html-sanitization) recommendations:
 
 > HTML Sanitization will strip dangerous HTML from a variable and return a safe string of HTML. OWASP recommends **DOMPurify** for HTML Sanitization.
+
+## Requirements
+
+- PHP >= 8.2
+- ext-json
 
 ## Installation
 
