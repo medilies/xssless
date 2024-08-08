@@ -6,6 +6,17 @@ use Medilies\Xssless\Dompurify\DompurifyServiceConfig;
 use Medilies\Xssless\Xssless;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 
+test('setup()', function () {
+    $cleaner = (new DompurifyService)->configure(new DompurifyServiceConfig(
+        'node',
+        'npm',
+        '127.0.0.1',
+        63000,
+    ));
+
+    expect(fn () => $cleaner->setup())->not->toThrow(Exception::class);
+});
+
 test('send()', function () {
     $cleaner = (new DompurifyService)->configure(new DompurifyServiceConfig(
         'node',
@@ -23,7 +34,7 @@ test('send()', function () {
     $cleaner->stop()->throwIfFailedOnTerm();
 
     expect($clean)->toBe(str_repeat('*/', 34 * 1000).'<img>"&gt;');
-});
+})->depends('setup()');
 
 test('clean()', function () {
     $config = new DompurifyServiceConfig(
@@ -46,7 +57,7 @@ test('clean()', function () {
     $service->stop()->throwIfFailedOnTerm();
 
     expect($clean)->toBe('<img>"&gt;');
-});
+})->depends('setup()');
 
 it('throws on bad host', function () {
     $cleaner = (new DompurifyService)->configure(new DompurifyServiceConfig(
