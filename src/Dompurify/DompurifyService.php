@@ -31,13 +31,13 @@ class DompurifyService implements HasSetupInterface, ServiceInterface
 
     public function setup(): void
     {
-        $process = new Process([$this->config->npmPath, 'i'], __DIR__);
+        $process = new Process([$this->config->npm, 'i'], __DIR__);
         $process->mustRun();
     }
 
     public function send(string $html): string
     {
-        $url = "http://{$this->config->getHost()}:{$this->config->getPort()}";
+        $url = "http://{$this->config->host}:{$this->config->port}";
 
         $client = new Client;
         $res = $client->post($url, [
@@ -52,7 +52,7 @@ class DompurifyService implements HasSetupInterface, ServiceInterface
     public function start(): static
     {
         $this->serviceProcess = new Process([
-            $this->config->nodePath,
+            $this->config->node,
             __DIR__.DIRECTORY_SEPARATOR.'http.js',
             $this->config->host,
             $this->config->port,

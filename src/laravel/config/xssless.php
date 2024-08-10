@@ -8,12 +8,12 @@ return [
 
     'drivers' => [
         'dompurify-cli' => new DompurifyCliConfig(
-            env('NODE_PATH', 'node'),
-            env('NPM_PATH', 'npm'),
+            env('NODE_PATH', 'node'), // @phpstan-ignore argument.type
+            env('NPM_PATH', 'npm'), // @phpstan-ignore argument.type
         ),
         'dompurify-service' => new DompurifyServiceConfig(
-            env('NODE_PATH', 'node'),
-            env('NPM_PATH', 'npm'),
+            env('NODE_PATH', 'node'), // @phpstan-ignore argument.type
+            env('NPM_PATH', 'npm'), // @phpstan-ignore argument.type
             '127.0.0.1',
             63000,
         ),

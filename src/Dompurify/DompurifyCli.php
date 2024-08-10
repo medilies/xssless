@@ -24,7 +24,7 @@ class DompurifyCli implements CliInterface, HasSetupInterface
 
     public function setup(): void
     {
-        $process = new Process([$this->config->getNpmPath(), 'i'], __DIR__);
+        $process = new Process([$this->config->npm, 'i'], __DIR__);
         $process->mustRun();
     }
 
@@ -32,7 +32,7 @@ class DompurifyCli implements CliInterface, HasSetupInterface
     {
         $htmlFile = $this->saveHtml($html);
 
-        $process = new Process([$this->config->getNodePath(), $this->binPath(), $htmlFile]);
+        $process = new Process([$this->config->node, $this->binPath(), $htmlFile]);
         $process->mustRun();
 
         $output = $process->getOutput();
