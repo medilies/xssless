@@ -21,6 +21,8 @@ The default driver aligns with [OWASP](https://cheatsheetseries.owasp.org/cheats
 
 - PHP >= 8.2
 - ext-json
+- Node >= 18
+- NPM
 
 ## Installation
 
@@ -56,14 +58,17 @@ return [
 
     'drivers' => [
         'dompurify-cli' => new DompurifyCliConfig(
-            env('NODE_PATH', 'node'),
-            env('NPM_PATH', 'npm'),
+            node: env('NODE_PATH'),
+            npm: env('NPM_PATH'),
+            binary: null,
+            tempFolder: null,
         ),
         'dompurify-service' => new DompurifyServiceConfig(
-            env('NODE_PATH', 'node'),
-            env('NPM_PATH', 'npm'),
-            '127.0.0.1',
-            63000,
+            node: env('NODE_PATH'),
+            npm: env('NPM_PATH'),
+            host: '127.0.0.1',
+            port: 63000,
+            binary: null,
         ),
     ],
 ];

@@ -38,6 +38,10 @@ class DompurifyCli implements CliInterface, HasSetupInterface
         $output = $process->getOutput();
         $cleanHtmlPath = trim($output);
 
+        if (! file_exists($cleanHtmlPath)) {
+            throw new XsslessException("Could not locate the file '{$cleanHtmlPath}'");
+        }
+
         $clean = file_get_contents($cleanHtmlPath);
 
         if ($clean === false) {
@@ -53,8 +57,7 @@ class DompurifyCli implements CliInterface, HasSetupInterface
 
     private function binPath(): string
     {
-        // TODO: allow config to override
-        $binPath = __DIR__.DIRECTORY_SEPARATOR.'cli.js';
+        $binPath = $this->config->binary ?? __DIR__.DIRECTORY_SEPARATOR.'cli.js';
 
         $binAbsPath = realpath($binPath);
 
@@ -69,6 +72,7 @@ class DompurifyCli implements CliInterface, HasSetupInterface
     {
         $dir = $this->tempDir();
 
+        // ? use tempnam
         $fileName = mt_rand().'-'.str_replace([' ', '.'], '', microtime()).'.xss';
 
         $path = $dir.DIRECTORY_SEPARATOR.$fileName;
@@ -82,16 +86,20 @@ class DompurifyCli implements CliInterface, HasSetupInterface
 
     private function tempDir(): string
     {
-        // TODO: take path from config
-        $tempDir = rtrim(sys_get_temp_dir(), DIRECTORY_SEPARATOR);
-        $dir = $tempDir.DIRECTORY_SEPARATOR.'xssless';
+        if (is_null($this->config->tempFolder)) {
+            $dir = sys_get_temp_dir().DIRECTORY_SEPARATOR.'xssless';
 
-        if (! file_exists($dir)) {
-            if (mkdir($dir, 0777, true) === false) {
+            if (! file_exists($dir) && mkdir($dir, 0777, true) === false) {
                 throw new XsslessException("Could not create temporary directory '{$dir}'");
             }
+
+            return $dir;
         }
 
-        return $dir;
+        if (! file_exists($this->config->tempFolder)) {
+            throw new XsslessException("Could not locate temporary directory '{$this->config->tempFolder}'");
+        }
+
+        return $this->config->tempFolder;
     }
 }

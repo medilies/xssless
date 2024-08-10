@@ -3,10 +3,20 @@
 use Medilies\Xssless\Dompurify\DompurifyCli;
 use Medilies\Xssless\Dompurify\DompurifyCliConfig;
 use Medilies\Xssless\Xssless;
+use Medilies\Xssless\XsslessException;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 
-test('setup()', function () {
+it('throws on bad node path', function () {
     $cleaner = (new DompurifyCli)->configure(new DompurifyCliConfig(
+        'nodeZz',
+        'npm',
+    ));
+
+    expect(fn () => $cleaner->exec('foo'))->toThrow(ProcessFailedException::class);
+});
+
+test('setup()', function () {
+    $cleaner = (new Xssless)->using(new DompurifyCliConfig(
         'node',
         'npm',
     ));
@@ -27,8 +37,9 @@ test('exec()', function () {
 
 test('clean()', function () {
     $cleaner = (new Xssless)->using(new DompurifyCliConfig(
-        'node',
-        'npm',
+        node: 'node',
+        npm: 'npm',
+        tempFolder: __DIR__,
     ));
 
     $clean = $cleaner->clean('<IMG """><SCRIPT>alert("XSS")</SCRIPT>">');
@@ -36,11 +47,32 @@ test('clean()', function () {
     expect($clean)->toBe('<img>"&gt;');
 })->depends('setup()');
 
-it('throws on bad node path', function () {
+it('throws when cannot read cleaned file', function () {
     $cleaner = (new DompurifyCli)->configure(new DompurifyCliConfig(
-        'nodeZz',
-        'npm',
+        node: 'node',
+        npm: 'npm',
+        binary: __DIR__.'/js-mocks/cli-returns-bad-path.js',
     ));
 
-    expect(fn () => $cleaner->exec('foo'))->toThrow(ProcessFailedException::class);
-});
+    expect(fn () => $cleaner->exec('foo'))->toThrow(XsslessException::class);
+})->depends('setup()');
+
+it('throws when cannot find binary file', function () {
+    $cleaner = (new DompurifyCli)->configure(new DompurifyCliConfig(
+        node: 'node',
+        npm: 'npm',
+        binary: __DIR__.'/js-mocks/x.js',
+    ));
+
+    expect(fn () => $cleaner->exec('foo'))->toThrow(XsslessException::class);
+})->depends('setup()');
+
+it('throws when cannot locate temp folder', function () {
+    $cleaner = (new DompurifyCli)->configure(new DompurifyCliConfig(
+        node: 'node',
+        npm: 'npm',
+        tempFolder: __DIR__.'/x',
+    ));
+
+    expect(fn () => $cleaner->exec('foo'))->toThrow(XsslessException::class);
+})->depends('setup()');

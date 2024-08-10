@@ -9,8 +9,10 @@ class DompurifyCliConfig implements ConfigInterface
     private readonly string $class;
 
     public function __construct(
-        public string $node,
-        public string $npm,
+        public string $node = 'node',
+        public string $npm = 'npm',
+        public ?string $binary = null,
+        public ?string $tempFolder = null,
     ) {
         $this->class = DompurifyCli::class;
     }

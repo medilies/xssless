@@ -53,7 +53,7 @@ class DompurifyService implements HasSetupInterface, ServiceInterface
     {
         $this->serviceProcess = new Process([
             $this->config->node,
-            __DIR__.DIRECTORY_SEPARATOR.'http.js',
+            $this->config->binary ?? __DIR__.DIRECTORY_SEPARATOR.'http.js',
             $this->config->host,
             $this->config->port,
         ]);
@@ -145,4 +145,6 @@ class DompurifyService implements HasSetupInterface, ServiceInterface
     // {
     //     return $this->serviceProcess->getTermSignal() === 1;
     // }
+
+    // 92..97, 104, 113..136
 }

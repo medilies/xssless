@@ -46,9 +46,7 @@ test('clean()', function () {
 
     $cleaner = (new Xssless)->using($config);
 
-    $service = (new DompurifyService)->configure($config);
-
-    $service->start();
+    $service = $cleaner->start();
 
     $dirty = '<IMG """><SCRIPT>alert("XSS")</SCRIPT>">';
 
