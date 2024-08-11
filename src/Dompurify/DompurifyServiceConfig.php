@@ -6,13 +6,13 @@ use Medilies\Xssless\ConfigInterface;
 
 class DompurifyServiceConfig implements ConfigInterface
 {
-    public readonly string $class;
+    private readonly string $class;
 
     public function __construct(
         public string $node = 'node',
         public string $npm = 'npm',
         public string $host = '127.0.0.1',
-        public int $port = 6300,
+        public int $port = 63000,
         public ?string $binary = null,
     ) {
         $this->class = DompurifyService::class;

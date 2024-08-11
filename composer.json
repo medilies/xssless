@@ -2,10 +2,15 @@
     "name": "medilies/xssless",
     "description": "Clean your strings from XSS threats.",
     "keywords": [
+        "html",
         "xss",
+        "safe",
+        "prevent",
         "sanitizer",
         "purifier",
-        "html"
+        "cleaner",
+        "filter",
+        "laravel"
     ],
     "homepage": "https://github.com/medilies/xssless",
     "license": "MIT",

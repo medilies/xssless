@@ -9,13 +9,14 @@
 
 ## Why use Xssless
 
-- **Prevent XSS Attacks:** Safeguard your application by cleaning user-submitted HTML, eliminating potential XSS threats.
-- **Painless HTML 5 support:** Xssless leverages engines with the best HTML5 support.
-- **Easy to build policies:** (todo).
+- Your application features a [Rich Text Editor](https://en.wikipedia.org/wiki/Online_rich-text_editor) and you want to prevent all XSS.
+- You want full HTML5 & CSS3 support.
+- You want to allow all safe HTML elements, their attributes, and CSS properties without going deep into whitelist configs.
+- [TODO] You want a fluent and an intuitive way to build policies.
 
 The default driver aligns with [OWASP](https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html#html-sanitization) recommendations:
 
-> HTML Sanitization will strip dangerous HTML from a variable and return a safe string of HTML. OWASP recommends **DOMPurify** for HTML Sanitization.
+> ... OWASP recommends **DOMPurify** for HTML Sanitization.
 
 ## Requirements
 
@@ -32,7 +33,7 @@ Install the package via composer:
 composer require medilies/xssless
 ```
 
-For non Laravel projects pick a config and run the following code:
+For non Laravel projects, pick a config and run the following code:
 
 ```php
 $config = new Medilies\Xssless\Dompurify\DompurifyCliConfig('node', 'npm');
@@ -42,43 +43,14 @@ $config = new Medilies\Xssless\Dompurify\DompurifyCliConfig('node', 'npm');
     ->setup();
 ```
 
-### Laravel setup
-
-You can publish the config file with:
-
-```bash
-php artisan vendor:publish --tag="xssless-config"
-```
-
-This is the contents of the published config file:
-
-```php
-return [
-    'default' => 'dompurify-cli',
-
-    'drivers' => [
-        'dompurify-cli' => new DompurifyCliConfig(
-            node: env('NODE_PATH'),
-            npm: env('NPM_PATH'),
-            binary: null,
-            tempFolder: null,
-        ),
-        'dompurify-service' => new DompurifyServiceConfig(
-            node: env('NODE_PATH'),
-            npm: env('NPM_PATH'),
-            host: '127.0.0.1',
-            port: 63000,
-            binary: null,
-        ),
-    ],
-];
-```
-
-Run the following command after picking your `xssless.default` config:
+For non Laravel projects, run the following command:
 
 ```shell
 php artisan xssless:setup
 ```
+
+> [!IMPORTANT]  
+> You may need to re-run the setup when switching drivers.
 
 ## Usage
 
@@ -111,13 +83,43 @@ $xssless->clean($html);
 
 ### Laravel usage
 
-Using `Medilies\Xssless\Dompurify\DompurifyCliConfig`:
+You can publish the config file with:
+
+```bash
+php artisan vendor:publish --tag="xssless-config"
+```
+
+This is the contents of the published config file:
+
+```php
+return [
+    'default' => 'dompurify-cli',
+
+    'drivers' => [
+        'dompurify-cli' => new DompurifyCliConfig(
+            node: env('NODE_PATH'),
+            npm: env('NPM_PATH'),
+            binary: null,
+            tempFolder: null,
+        ),
+        'dompurify-service' => new DompurifyServiceConfig(
+            node: env('NODE_PATH'),
+            npm: env('NPM_PATH'),
+            host: '127.0.0.1',
+            port: 63000,
+            binary: null,
+        ),
+    ],
+];
+```
+
+Using `dompurify-cli`:
 
 ```php
 Medilies\Xssless\Laravel\Facades\Xssless::clean($html);
 ```
 
-Using `Medilies\Xssless\Dompurify\DompurifyServiceConfig`:
+Using `dompurify-service`:
 
 ```shell
 php artisan xssless:start
@@ -134,18 +136,6 @@ Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed re
 ## Contributing
 
 Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
-
-### Testing
-
-```bash
-./vendor/bin/pest
-```
-
-### Formatting
-
-```bash
-./vendor/bin/pint
-```
 
 ## Security Vulnerabilities
 

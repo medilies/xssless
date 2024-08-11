@@ -18,6 +18,7 @@ class Xssless extends Facade
 {
     protected static function getFacadeAccessor(): string
     {
+        // TODO: model cast
         return \Medilies\Xssless\Xssless::class;
     }
 }

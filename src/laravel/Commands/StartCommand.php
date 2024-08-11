@@ -15,6 +15,7 @@ class StartCommand extends Command
 
     public function handle(): void
     {
+        // TODO: non Laravel command
         $service = Xssless::usingLaravelConfig()->start();
 
         $terminate = function ($signal) use ($service) {

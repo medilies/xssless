@@ -8,9 +8,9 @@ class Xssless
 
     // TODO: policy builder
 
-    public function clean(string $html, ?ConfigInterface $config = null): string
+    public function clean(string $html, ?ConfigInterface $tempConfig = null): string
     {
-        $cleaner = $this->makeCleaner($config);
+        $cleaner = $this->makeCleaner($tempConfig);
 
         return match (true) {
             $cleaner instanceof CliInterface => $this->exec($cleaner, $html),
@@ -18,9 +18,9 @@ class Xssless
         };
     }
 
-    public function start(?ConfigInterface $config = null): ServiceInterface
+    public function start(?ConfigInterface $tempConfig = null): ServiceInterface
     {
-        $service = $this->makeCleaner($config);
+        $service = $this->makeCleaner($tempConfig);
 
         if (! $service instanceof ServiceInterface) {
             throw new XsslessException("'".$service::class."' must implement: '".ServiceInterface::class."'.");
@@ -29,9 +29,9 @@ class Xssless
         return $service->start();
     }
 
-    public function setup(?ConfigInterface $config = null): void
+    public function setup(?ConfigInterface $tempConfig = null): void
     {
-        $service = $this->makeCleaner($config);
+        $service = $this->makeCleaner($tempConfig);
 
         if (! $service instanceof HasSetupInterface) {
             throw new XsslessException("'".$service::class."' must implement: '".HasSetupInterface::class."'.");
@@ -66,9 +66,9 @@ class Xssless
         return $this;
     }
 
-    private function makeCleaner(?ConfigInterface $config = null): CliInterface|ServiceInterface
+    private function makeCleaner(?ConfigInterface $tempConfig = null): CliInterface|ServiceInterface
     {
-        $config ??= $this->config ?? null;
+        $config = $tempConfig ?? $this->config ?? null;
 
         if (is_null($config)) {
             throw new XsslessException('A config must be provided.');

@@ -15,6 +15,7 @@ class SetupCommand extends Command
 
     public function handle(): void
     {
+        // TODO: non Laravel command
         Xssless::usingLaravelConfig()->setup();
     }
 }

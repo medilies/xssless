@@ -7,23 +7,13 @@ use Medilies\Xssless\Xssless;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 
 test('setup()', function () {
-    $cleaner = (new DompurifyService)->configure(new DompurifyServiceConfig(
-        'node',
-        'npm',
-        '127.0.0.1',
-        63000,
-    ));
+    $cleaner = (new DompurifyService)->configure(new DompurifyServiceConfig);
 
     expect(fn () => $cleaner->setup())->not->toThrow(Exception::class);
 });
 
 test('send()', function () {
-    $cleaner = (new DompurifyService)->configure(new DompurifyServiceConfig(
-        'node',
-        'npm',
-        '127.0.0.1',
-        63000,
-    ));
+    $cleaner = (new DompurifyService)->configure(new DompurifyServiceConfig);
 
     $cleaner->start();
 
@@ -38,10 +28,7 @@ test('send()', function () {
 
 test('clean()', function () {
     $config = new DompurifyServiceConfig(
-        'node',
-        'npm',
-        '127.0.0.1',
-        63001,
+        port: 63001, // for parallel tests
     );
 
     $cleaner = (new Xssless)->using($config);
@@ -59,10 +46,7 @@ test('clean()', function () {
 
 it('throws on bad host', function () {
     $cleaner = (new DompurifyService)->configure(new DompurifyServiceConfig(
-        'node',
-        'npm',
-        'a.b.c.example.com',
-        63000,
+        host: 'a.b.c.example.com',
     ));
 
     $dirty = '<IMG """><SCRIPT>alert("XSS")</SCRIPT>">';
@@ -72,10 +56,7 @@ it('throws on bad host', function () {
 
 it('throws on bad node path', function () {
     $service = (new DompurifyService)->configure(new DompurifyServiceConfig(
-        'nodeZz',
-        'npm',
-        '127.0.0.1',
-        5555555555,
+        node: 'nodeZz',
     ));
 
     expect(fn () => $service->start())->toThrow(ProcessFailedException::class);

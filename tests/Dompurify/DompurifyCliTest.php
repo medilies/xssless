@@ -8,27 +8,20 @@ use Symfony\Component\Process\Exception\ProcessFailedException;
 
 it('throws on bad node path', function () {
     $cleaner = (new DompurifyCli)->configure(new DompurifyCliConfig(
-        'nodeZz',
-        'npm',
+        node: 'nodeZz',
     ));
 
     expect(fn () => $cleaner->exec('foo'))->toThrow(ProcessFailedException::class);
 });
 
 test('setup()', function () {
-    $cleaner = (new Xssless)->using(new DompurifyCliConfig(
-        'node',
-        'npm',
-    ));
+    $cleaner = (new Xssless)->using(new DompurifyCliConfig);
 
     expect(fn () => $cleaner->setup())->not->toThrow(Exception::class);
 });
 
 test('exec()', function () {
-    $cleaner = (new DompurifyCli)->configure(new DompurifyCliConfig(
-        'node',
-        'npm',
-    ));
+    $cleaner = (new DompurifyCli)->configure(new DompurifyCliConfig);
 
     $clean = $cleaner->exec('<IMG """><SCRIPT>alert("XSS")</SCRIPT>">');
 
@@ -37,8 +30,6 @@ test('exec()', function () {
 
 test('clean()', function () {
     $cleaner = (new Xssless)->using(new DompurifyCliConfig(
-        node: 'node',
-        npm: 'npm',
         tempFolder: __DIR__,
     ));
 
@@ -49,8 +40,6 @@ test('clean()', function () {
 
 it('throws when cannot read cleaned file', function () {
     $cleaner = (new DompurifyCli)->configure(new DompurifyCliConfig(
-        node: 'node',
-        npm: 'npm',
         binary: __DIR__.'/js-mocks/cli-returns-bad-path.js',
     ));
 
@@ -59,8 +48,6 @@ it('throws when cannot read cleaned file', function () {
 
 it('throws when cannot find binary file', function () {
     $cleaner = (new DompurifyCli)->configure(new DompurifyCliConfig(
-        node: 'node',
-        npm: 'npm',
         binary: __DIR__.'/js-mocks/x.js',
     ));
 
@@ -69,8 +56,6 @@ it('throws when cannot find binary file', function () {
 
 it('throws when cannot locate temp folder', function () {
     $cleaner = (new DompurifyCli)->configure(new DompurifyCliConfig(
-        node: 'node',
-        npm: 'npm',
         tempFolder: __DIR__.'/x',
     ));
 
