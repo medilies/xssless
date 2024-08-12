@@ -7,6 +7,10 @@ use Medilies\Xssless\Xssless;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Exception\ProcessTimedOutException;
 
+// ----------------------------------------------------------------------------
+// Errors and mocked binaries
+// ----------------------------------------------------------------------------
+
 it('throws on bad node path', function () {
     $service = (new DompurifyService)->configure(new DompurifyServiceConfig(
         node: 'nodeZz',
@@ -41,6 +45,10 @@ it('throws on bad host', function () {
 
     expect(fn () => $cleaner->send($dirty))->toThrow(ConnectException::class);
 });
+
+// ----------------------------------------------------------------------------
+// Real setup and clean
+// ----------------------------------------------------------------------------
 
 test('setup()', function () {
     $cleaner = (new DompurifyService)->configure(new DompurifyServiceConfig);

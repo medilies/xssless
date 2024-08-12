@@ -16,8 +16,8 @@ class DompurifyService implements HasSetupInterface, ServiceInterface
 
     // TODO: better injection (fs and process http)
 
-    // TODO: private
-    public Process $serviceProcess;
+    private Process $serviceProcess;
+
     // ? add static array for all processes
 
     /** @param DompurifyServiceConfig $config */
@@ -73,8 +73,8 @@ class DompurifyService implements HasSetupInterface, ServiceInterface
 
         $this->serviceProcess->setIdleTimeout(null);
 
-        // ? rm check
         if (! $this->isRunning()) {
+            // Triggers on bad note path
             throw new ProcessFailedException($this->serviceProcess);
         }
 

@@ -32,7 +32,12 @@ class DompurifyCli implements CliInterface, HasSetupInterface
     {
         $htmlFile = $this->saveHtml($html);
 
-        $process = new Process([$this->config->node, $this->binPath(), $htmlFile]);
+        $process = new Process([
+            $this->config->node,
+            $this->config->binary ?? __DIR__.DIRECTORY_SEPARATOR.'cli.js', // ? check file explicitly
+            $htmlFile,
+        ]);
+
         $process->mustRun();
 
         $output = $process->getOutput();
@@ -53,19 +58,6 @@ class DompurifyCli implements CliInterface, HasSetupInterface
         unlink($cleanHtmlPath) ?: throw new XsslessException("Failed to delete '$cleanHtmlPath'");
 
         return $clean;
-    }
-
-    private function binPath(): string
-    {
-        $binPath = $this->config->binary ?? __DIR__.DIRECTORY_SEPARATOR.'cli.js';
-
-        $binAbsPath = realpath($binPath);
-
-        if ($binAbsPath === false) {
-            throw new XsslessException("Cannot locate '$binPath'");
-        }
-
-        return $binAbsPath;
     }
 
     private function saveHtml(string $value): string

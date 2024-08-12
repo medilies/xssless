@@ -41,7 +41,6 @@ class StartCommand extends Command
 
             pcntl_signal_dispatch();
 
-            // Sleep for a short period to avoid busy-waiting
             usleep(100_000);
         }
     }
