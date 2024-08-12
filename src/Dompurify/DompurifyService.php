@@ -7,7 +7,6 @@ use GuzzleHttp\RequestOptions;
 use Medilies\Xssless\ConfigInterface;
 use Medilies\Xssless\HasSetupInterface;
 use Medilies\Xssless\ServiceInterface;
-use Medilies\Xssless\XsslessException;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 
@@ -58,15 +57,24 @@ class DompurifyService implements HasSetupInterface, ServiceInterface
             $this->config->port,
         ]);
 
+        $this->serviceProcess->setIdleTimeout($this->config->startupTimeoutMs / 1000);
+
         $this->serviceProcess->start();
 
+        // ? is there a possibility to miss output before running the waitUntil
         $this->serviceProcess->waitUntil(function (string $type, string $buffer) {
-            // ? timeout
-            // ! ensure service always returns output
-            return strlen($buffer) > 5;
+            if ($type === Process::ERR) {
+                throw new ProcessFailedException($this->serviceProcess);
+            }
+
+            // Must output when service is listening
+            return strlen($buffer) > 4;
         });
 
-        if (! $this->serviceProcess->isRunning()) {
+        $this->serviceProcess->setIdleTimeout(null);
+
+        // ? rm check
+        if (! $this->isRunning()) {
             throw new ProcessFailedException($this->serviceProcess);
         }
 
@@ -75,9 +83,7 @@ class DompurifyService implements HasSetupInterface, ServiceInterface
 
     public function stop(): static
     {
-        if ($this->isRunning()) {
-            $this->serviceProcess->stop();
-        }
+        $this->serviceProcess->stop();
 
         return $this;
     }
@@ -96,53 +102,4 @@ class DompurifyService implements HasSetupInterface, ServiceInterface
     {
         return $this->serviceProcess->getIncrementalErrorOutput();
     }
-
-    public function throwIfFailedOnTerm(): void
-    {
-        if ($this->serviceProcess->isRunning()) {
-            // ? stop it
-            throw new XsslessException('The service is still running');
-        }
-
-        // TODO: fix windows check
-        // https://github.com/medilies/xssless/actions/runs/10288495452/job/28474063301#step:7:26
-        if ($this->isSigTerm() || $this->isWindows()) {
-            return;
-        }
-
-        throw new ProcessFailedException($this->serviceProcess);
-    }
-
-    // ? interface
-    public function waitForTermination(int $timeout): void
-    {
-        $elapsed = 0;
-        $sleepInterval = 100; // Sleep for 100 milliseconds
-
-        while ($this->serviceProcess->isRunning() && $elapsed < $timeout) {
-            usleep($sleepInterval * 1000);
-            $elapsed += $sleepInterval;
-        }
-
-        if ($this->serviceProcess->isRunning()) {
-            throw new XsslessException('Process did not terminate within the given timeout');
-        }
-    }
-
-    // ========================================================================
-
-    private function isWindows(): bool
-    {
-        return strtoupper(substr(PHP_OS, 0, 3)) === 'WIN';
-    }
-
-    private function isSigTerm(): bool
-    {
-        return $this->serviceProcess->getTermSignal() === 15;
-    }
-
-    // private function isSigHup(): bool
-    // {
-    //     return $this->serviceProcess->getTermSignal() === 1;
-    // }
 }

@@ -14,6 +14,7 @@ class DompurifyServiceConfig implements ConfigInterface
         public string $host = '127.0.0.1',
         public int $port = 63000,
         public ?string $binary = null,
+        public int $startupTimeoutMs = 6000,
     ) {
         $this->class = DompurifyService::class;
     }

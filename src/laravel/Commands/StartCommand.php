@@ -24,6 +24,7 @@ class StartCommand extends Command
             exit;
         };
 
+        // ? Is this necessary
         pcntl_signal(SIGTERM, $terminate);
         pcntl_signal(SIGINT, $terminate);
 
@@ -43,7 +44,5 @@ class StartCommand extends Command
             // Sleep for a short period to avoid busy-waiting
             usleep(100_000);
         }
-
-        $service->throwIfFailedOnTerm();
     }
 }

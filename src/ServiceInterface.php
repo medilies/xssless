@@ -17,6 +17,4 @@ interface ServiceInterface extends ConfigurableInterface
     public function getIncrementalOutput(): string;
 
     public function getIncrementalErrorOutput(): string;
-
-    public function throwIfFailedOnTerm(): void;
 }

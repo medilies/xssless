@@ -14,6 +14,22 @@ it('throws on bad node path', function () {
     expect(fn () => $cleaner->exec('foo'))->toThrow(ProcessFailedException::class);
 });
 
+it('throws when cannot find binary file', function () {
+    $cleaner = (new DompurifyCli)->configure(new DompurifyCliConfig(
+        binary: __DIR__.'/js-mocks/x.js',
+    ));
+
+    expect(fn () => $cleaner->exec('foo'))->toThrow(XsslessException::class);
+});
+
+it('throws when cannot locate temp folder', function () {
+    $cleaner = (new DompurifyCli)->configure(new DompurifyCliConfig(
+        tempFolder: __DIR__.'/x',
+    ));
+
+    expect(fn () => $cleaner->exec('foo'))->toThrow(XsslessException::class);
+});
+
 test('setup()', function () {
     $cleaner = (new Xssless)->using(new DompurifyCliConfig);
 
@@ -44,20 +60,4 @@ it('throws when cannot read cleaned file', function () {
     ));
 
     expect(fn () => $cleaner->exec('foo'))->toThrow(XsslessException::class);
-})->depends('setup()');
-
-it('throws when cannot find binary file', function () {
-    $cleaner = (new DompurifyCli)->configure(new DompurifyCliConfig(
-        binary: __DIR__.'/js-mocks/x.js',
-    ));
-
-    expect(fn () => $cleaner->exec('foo'))->toThrow(XsslessException::class);
-})->depends('setup()');
-
-it('throws when cannot locate temp folder', function () {
-    $cleaner = (new DompurifyCli)->configure(new DompurifyCliConfig(
-        tempFolder: __DIR__.'/x',
-    ));
-
-    expect(fn () => $cleaner->exec('foo'))->toThrow(XsslessException::class);
-})->depends('setup()');
+});
