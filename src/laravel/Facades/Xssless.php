@@ -3,7 +3,8 @@
 namespace Medilies\Xssless\Laravel\Facades;
 
 use Illuminate\Support\Facades\Facade;
-use Medilies\Xssless\ServiceInterface;
+use Medilies\Xssless\Interfaces\ConfigInterface;
+use Medilies\Xssless\Interfaces\ServiceInterface;
 
 /**
  * @method static string clean(string $html, ?ConfigInterface $config = null)

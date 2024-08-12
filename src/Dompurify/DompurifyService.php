@@ -4,9 +4,9 @@ namespace Medilies\Xssless\Dompurify;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\RequestOptions;
-use Medilies\Xssless\ConfigInterface;
-use Medilies\Xssless\HasSetupInterface;
-use Medilies\Xssless\ServiceInterface;
+use Medilies\Xssless\Interfaces\ConfigInterface;
+use Medilies\Xssless\Interfaces\HasSetupInterface;
+use Medilies\Xssless\Interfaces\ServiceInterface;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 

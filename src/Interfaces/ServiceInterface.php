@@ -1,11 +1,9 @@
 <?php
 
-namespace Medilies\Xssless;
+namespace Medilies\Xssless\Interfaces;
 
 interface ServiceInterface extends ConfigurableInterface
 {
-    public function setup(): void;
-
     public function send(string $html): string;
 
     public function start(): static;

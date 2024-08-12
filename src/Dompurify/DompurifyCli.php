@@ -2,10 +2,10 @@
 
 namespace Medilies\Xssless\Dompurify;
 
-use Medilies\Xssless\CliInterface;
-use Medilies\Xssless\ConfigInterface;
-use Medilies\Xssless\HasSetupInterface;
-use Medilies\Xssless\XsslessException;
+use Medilies\Xssless\Exceptions\XsslessException;
+use Medilies\Xssless\Interfaces\CliInterface;
+use Medilies\Xssless\Interfaces\ConfigInterface;
+use Medilies\Xssless\Interfaces\HasSetupInterface;
 use Symfony\Component\Process\Process;
 
 class DompurifyCli implements CliInterface, HasSetupInterface

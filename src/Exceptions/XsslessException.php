@@ -1,6 +1,6 @@
 <?php
 
-namespace Medilies\Xssless;
+namespace Medilies\Xssless\Exceptions;
 
 use Exception;
 

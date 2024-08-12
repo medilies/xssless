@@ -2,8 +2,8 @@
 
 use Medilies\Xssless\Dompurify\DompurifyCli;
 use Medilies\Xssless\Dompurify\DompurifyCliConfig;
+use Medilies\Xssless\Exceptions\XsslessException;
 use Medilies\Xssless\Xssless;
-use Medilies\Xssless\XsslessException;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 
 it('throws on bad node path', function () {

@@ -2,6 +2,12 @@
 
 namespace Medilies\Xssless;
 
+use Medilies\Xssless\Exceptions\XsslessException;
+use Medilies\Xssless\Interfaces\CliInterface;
+use Medilies\Xssless\Interfaces\ConfigInterface;
+use Medilies\Xssless\Interfaces\HasSetupInterface;
+use Medilies\Xssless\Interfaces\ServiceInterface;
+
 class Xssless
 {
     private ConfigInterface $config;

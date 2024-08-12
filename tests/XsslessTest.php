@@ -1,10 +1,10 @@
 <?php
 
-use Medilies\Xssless\CliInterface;
-use Medilies\Xssless\ConfigInterface;
 use Medilies\Xssless\Dompurify\DompurifyCliConfig;
+use Medilies\Xssless\Exceptions\XsslessException;
+use Medilies\Xssless\Interfaces\CliInterface;
+use Medilies\Xssless\Interfaces\ConfigInterface;
 use Medilies\Xssless\Xssless;
-use Medilies\Xssless\XsslessException;
 
 it('throws when makeCleaner() with no config', function () {
     $cleaner = new Xssless;

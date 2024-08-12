@@ -2,7 +2,7 @@
 
 namespace Medilies\Xssless\Dompurify;
 
-use Medilies\Xssless\ConfigInterface;
+use Medilies\Xssless\Interfaces\ConfigInterface;
 
 class DompurifyCliConfig implements ConfigInterface
 {
