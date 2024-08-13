@@ -8,7 +8,7 @@ class DompurifyCliConfig implements ConfigInterface
 {
     private readonly string $class;
 
-    public function __construct(
+    final public function __construct(
         public string $node = 'node',
         public string $npm = 'npm',
         public ?string $binary = null,
@@ -25,7 +25,7 @@ class DompurifyCliConfig implements ConfigInterface
     /**
      * Must be implemented for Laravel config cache
      */
-    public static function __set_state(array $state_array): static
+    public static function __set_state(array $state_array): static // @phpstan-ignore-line
     {
         return new static(...array_intersect_key($state_array, [
             'node' => true,
