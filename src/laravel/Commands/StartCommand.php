@@ -3,7 +3,6 @@
 namespace Medilies\Xssless\Laravel\Commands;
 
 use Illuminate\Console\Command;
-use Medilies\Xssless\Interfaces\ServiceInterface;
 use Medilies\Xssless\Laravel\Facades\Xssless;
 
 class StartCommand extends Command
@@ -25,8 +24,6 @@ class StartCommand extends Command
             return;
         }
 
-        $this->onTermination($service);
-
         while ($service->isRunning()) {
             $output = $service->getIncrementalOutput();
             $errorOutput = $service->getIncrementalErrorOutput();
@@ -38,25 +35,7 @@ class StartCommand extends Command
                 $this->error($errorOutput);
             }
 
-            pcntl_signal_dispatch();
-
             usleep(100_000);
         }
-    }
-
-    private function onTermination(ServiceInterface $service): void
-    {
-        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN' || ! extension_loaded('pcntl')) {
-            return;
-        }
-
-        $terminate = function ($signal) use ($service) {
-            $this->warn("Terminating...\n");
-            $service->stop();
-            exit;
-        };
-
-        pcntl_signal(SIGTERM, $terminate);
-        pcntl_signal(SIGINT, $terminate);
     }
 }
