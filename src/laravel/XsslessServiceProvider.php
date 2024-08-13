@@ -11,6 +11,8 @@ class XsslessServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
+        $this->mergeConfigFrom(__DIR__.'/config/xssless.php', 'xssless');
+
         $this->app->bind(
             Xssless::class,
             fn () => (new Xssless)->usingLaravelConfig()
