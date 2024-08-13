@@ -3,6 +3,7 @@
 namespace Medilies\Xssless\Laravel\Commands;
 
 use Illuminate\Console\Command;
+use Medilies\Xssless\Interfaces\ServiceInterface;
 use Medilies\Xssless\Laravel\Facades\Xssless;
 
 class StartCommand extends Command
@@ -18,15 +19,13 @@ class StartCommand extends Command
         // TODO: non Laravel command
         $service = Xssless::usingLaravelConfig()->start();
 
-        $terminate = function ($signal) use ($service) {
-            $this->warn("Terminating...\n");
-            $service->stop();
-            exit;
-        };
+        if (is_null($service)) {
+            $this->info('The current driver is not a service to start.');
 
-        // ? Is this necessary
-        pcntl_signal(SIGTERM, $terminate);
-        pcntl_signal(SIGINT, $terminate);
+            return;
+        }
+
+        $this->onTermination($service);
 
         while ($service->isRunning()) {
             $output = $service->getIncrementalOutput();
@@ -43,5 +42,21 @@ class StartCommand extends Command
 
             usleep(100_000);
         }
+    }
+
+    private function onTermination(ServiceInterface $service): void
+    {
+        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN' || ! extension_loaded('pcntl')) {
+            return;
+        }
+
+        $terminate = function ($signal) use ($service) {
+            $this->warn("Terminating...\n");
+            $service->stop();
+            exit;
+        };
+
+        pcntl_signal(SIGTERM, $terminate);
+        pcntl_signal(SIGINT, $terminate);
     }
 }

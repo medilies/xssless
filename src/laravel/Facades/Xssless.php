@@ -8,8 +8,8 @@ use Medilies\Xssless\Interfaces\ServiceInterface;
 
 /**
  * @method static string clean(string $html, ?ConfigInterface $config = null)
- * @method static ServiceInterface start(?ConfigInterface $config = null)
- * @method static void setup(?ConfigInterface $config = null)
+ * @method static ?ServiceInterface start(?ConfigInterface $config = null)
+ * @method static bool setup(?ConfigInterface $config = null)
  * @method static static usingLaravelConfig()
  * @method static static using(ConfigInterface $config)
  *

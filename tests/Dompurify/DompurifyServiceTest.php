@@ -51,9 +51,9 @@ it('throws on bad host', function () {
 // ----------------------------------------------------------------------------
 
 test('setup()', function () {
-    $cleaner = (new DompurifyService)->configure(new DompurifyServiceConfig);
+    $cleaner = (new Xssless)->using(new DompurifyServiceConfig);
 
-    expect(fn () => $cleaner->setup())->not->toThrow(Exception::class);
+    expect($cleaner->setup())->toBeTrue();
 });
 
 test('send()', function () {

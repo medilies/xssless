@@ -24,26 +24,28 @@ class Xssless
         };
     }
 
-    public function start(?ConfigInterface $tempConfig = null): ServiceInterface
+    public function start(?ConfigInterface $tempConfig = null): ?ServiceInterface
     {
         $service = $this->makeCleaner($tempConfig);
 
         if (! $service instanceof ServiceInterface) {
-            throw new XsslessException("'".$service::class."' must implement: '".ServiceInterface::class."'.");
+            return null;
         }
 
         return $service->start();
     }
 
-    public function setup(?ConfigInterface $tempConfig = null): void
+    public function setup(?ConfigInterface $tempConfig = null): bool
     {
-        $service = $this->makeCleaner($tempConfig);
+        $cleaner = $this->makeCleaner($tempConfig);
 
-        if (! $service instanceof HasSetupInterface) {
-            throw new XsslessException("'".$service::class."' must implement: '".HasSetupInterface::class."'.");
+        if (! $cleaner instanceof HasSetupInterface) {
+            return false;
         }
 
-        $service->setup();
+        $cleaner->setup();
+
+        return true;
     }
 
     public function usingLaravelConfig(): static

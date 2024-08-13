@@ -49,7 +49,7 @@ it('throws when cannot read cleaned file', function () {
 test('setup()', function () {
     $cleaner = (new Xssless)->using(new DompurifyCliConfig);
 
-    expect(fn () => $cleaner->setup())->not->toThrow(Exception::class);
+    expect($cleaner->setup())->toBeTrue();
 });
 
 test('exec()', function () {
