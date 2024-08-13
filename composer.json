@@ -1,6 +1,6 @@
 {
     "name": "medilies/xssless",
-    "description": "Clean your strings from XSS threats.",
+    "description": "Clean your rich text from XSS threats.",
     "keywords": [
         "html",
         "xss",

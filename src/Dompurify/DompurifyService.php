@@ -74,7 +74,7 @@ class DompurifyService implements HasSetupInterface, ServiceInterface
         $this->serviceProcess->setIdleTimeout(null);
 
         if (! $this->isRunning()) {
-            // Triggers on bad note path
+            // Triggers on bad node path
             throw new ProcessFailedException($this->serviceProcess);
         }
 

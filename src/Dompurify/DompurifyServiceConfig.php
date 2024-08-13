@@ -23,4 +23,18 @@ class DompurifyServiceConfig implements ConfigInterface
     {
         return $this->class;
     }
+
+    /**
+     * Must be implemented for Laravel config cache
+     */
+    public static function __set_state(array $state_array): static
+	{
+		return new static(...array_intersect_key($state_array, [
+            'node' => true,
+            'npm' => true,
+            'host' => true,
+            'port' => true,
+            'binary' => true,
+        ]));
+	}
 }

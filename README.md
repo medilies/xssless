@@ -1,4 +1,4 @@
-# Clean your strings from XSS threats
+# Clean your rich text from XSS threats
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/medilies/xssless.svg?style=flat-square)](https://packagist.org/packages/medilies/xssless)
 [![pest](https://img.shields.io/github/actions/workflow/status/medilies/xssless/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/medilies/xssless/actions?query=workflow%3Arun-tests+branch%3Amain)
@@ -49,8 +49,8 @@ For non Laravel projects, run the following command:
 php artisan xssless:setup
 ```
 
-> [!IMPORTANT]  
-> You may need to re-run the setup when switching drivers.
+<!-- > [!IMPORTANT]  
+> You may need to re-run the setup when switching drivers. -->
 
 ## Usage
 
@@ -97,14 +97,15 @@ return [
 
     'drivers' => [
         'dompurify-cli' => new DompurifyCliConfig(
-            node: env('NODE_PATH'),
-            npm: env('NPM_PATH'),
+            node: env('NODE_PATH', 'node'), // @phpstan-ignore argument.type
+            npm: env('NPM_PATH', 'npm'), // @phpstan-ignore argument.type
             binary: null,
             tempFolder: null,
         ),
+        
         'dompurify-service' => new DompurifyServiceConfig(
-            node: env('NODE_PATH'),
-            npm: env('NPM_PATH'),
+            node: env('NODE_PATH', 'node'), // @phpstan-ignore argument.type
+            npm: env('NPM_PATH', 'npm'), // @phpstan-ignore argument.type
             host: '127.0.0.1',
             port: 63000,
             binary: null,
