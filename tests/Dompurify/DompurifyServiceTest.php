@@ -3,6 +3,7 @@
 use GuzzleHttp\Exception\ConnectException;
 use Medilies\Xssless\Dompurify\DompurifyService;
 use Medilies\Xssless\Dompurify\DompurifyServiceConfig;
+use Medilies\Xssless\Exceptions\XsslessException;
 use Medilies\Xssless\Xssless;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Exception\ProcessTimedOutException;
@@ -46,6 +47,19 @@ it('throws on bad host', function () {
     expect(fn () => $cleaner->send($dirty))->toThrow(ConnectException::class);
 });
 
+it('throws response in not Ok', function () {
+    $cleaner = (new Xssless)->using(new DompurifyServiceConfig(
+        binary: __DIR__.'/js-mocks/service-respond-not-ok.mjs',
+        port: 63002,
+    ));
+
+    $service = $cleaner->start();
+
+    expect(fn () => $cleaner->clean('foo'))->toThrow(XsslessException::class);
+
+    $service->stop();
+});
+
 // ----------------------------------------------------------------------------
 // Real setup and clean
 // ----------------------------------------------------------------------------
@@ -71,11 +85,9 @@ test('send()', function () {
 })->depends('setup()');
 
 test('clean()', function () {
-    $config = new DompurifyServiceConfig(
+    $cleaner = (new Xssless)->using(new DompurifyServiceConfig(
         port: 63001, // for parallel tests
-    );
-
-    $cleaner = (new Xssless)->using($config);
+    ));
 
     $service = $cleaner->start();
 

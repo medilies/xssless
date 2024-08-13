@@ -4,6 +4,7 @@ namespace Medilies\Xssless\Dompurify;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\RequestOptions;
+use Medilies\Xssless\Exceptions\XsslessException;
 use Medilies\Xssless\Interfaces\ConfigInterface;
 use Medilies\Xssless\Interfaces\HasSetupInterface;
 use Medilies\Xssless\Interfaces\ServiceInterface;
@@ -43,7 +44,13 @@ class DompurifyService implements HasSetupInterface, ServiceInterface
             RequestOptions::JSON => [
                 'html' => $html,
             ],
+            RequestOptions::HTTP_ERRORS => false,
         ]);
+
+        if ($res->getStatusCode() !== 200) {
+            // TODO: log or detail content
+            throw new XsslessException('Failed to communicate with the service');
+        }
 
         return $res->getBody();
     }
