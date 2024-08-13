@@ -54,7 +54,7 @@ class Xssless
             throw new XsslessException('xssless.default must be a string.');
         }
 
-        $config = config("xssless.{$driver}");
+        $config = config("xssless.drivers.{$driver}");
 
         if (! $config instanceof ConfigInterface) {
             throw new XsslessException("xssless.drivers.{$driver} must implement: ".ConfigInterface::class);
