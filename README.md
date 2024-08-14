@@ -12,7 +12,7 @@
 - Your application features a [Rich Text Editor](https://en.wikipedia.org/wiki/Online_rich-text_editor) and you want to prevent all XSS.
 - You want full HTML5 & CSS3 support.
 - You want to allow all safe HTML elements, their attributes, and CSS properties without going deep into whitelist configs.
-- [TODO] You want a fluent and an intuitive way to build policies.
+<!-- - [TODO] You want a fluent and an intuitive way to build policies. -->
 
 The default driver aligns with [OWASP](https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html#html-sanitization) recommendations:
 
@@ -43,7 +43,7 @@ $config = new Medilies\Xssless\Dompurify\DompurifyCliConfig('node', 'npm');
     ->setup();
 ```
 
-For non Laravel projects, run the following command:
+For Laravel projects, run the following command:
 
 ```shell
 php artisan xssless:setup
@@ -57,24 +57,25 @@ php artisan xssless:setup
 Using `Medilies\Xssless\Dompurify\DompurifyCliConfig`:
 
 ```php
-$config = new Medilies\Xssless\Dompurify\DompurifyCliConfig('node', 'npm');
-
 (new Medilies\Xssless\Xssless)
-    ->using($config)
+    ->using(new Medilies\Xssless\Dompurify\DompurifyCliConfig)
     ->clean($html);
 ```
 
 Using `Medilies\Xssless\Dompurify\DompurifyServiceConfig`:
 
 ```php
-$config = new Medilies\Xssless\Dompurify\DompurifyServiceConfig('node', 'npm', '127.0.0.1', 63000);
+$config = new Medilies\Xssless\Dompurify\DompurifyServiceConfig(
+    host: '127.0.0.1', 
+    port: 63000
+);
 
 $xssless = (new Medilies\Xssless\Xssless)
     ->using($config);
 
 /**
- * It is better to have this part in a separate script that runs continuously
- * and independently from your app that manages the HTTP requests or CLI input
+ * It is better to have this part in a separate script
+ * that runs continuously and independently from your app 
  */
 $xssless->start();
 
@@ -114,17 +115,13 @@ return [
 ];
 ```
 
-Using `dompurify-cli`:
-
-```php
-Medilies\Xssless\Laravel\Facades\Xssless::clean($html);
-```
-
-Using `dompurify-service`:
+Run the following command (Not required by all drivers):
 
 ```shell
 php artisan xssless:start
 ```
+
+Use the facade:
 
 ```php
 Medilies\Xssless\Laravel\Facades\Xssless::clean($html);
