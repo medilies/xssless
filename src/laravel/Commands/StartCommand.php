@@ -16,7 +16,7 @@ class StartCommand extends Command
     public function handle(): void
     {
         // TODO: non Laravel command
-        $service = Xssless::usingLaravelConfig()->start();
+        $service = Xssless::start();
 
         if (is_null($service)) {
             $this->info('The current driver is not a service to start.');
